@@ -1,0 +1,52 @@
+package com.sunnychung.lib.multiplatform.kdatetime
+
+import kotlin.math.absoluteValue
+import kotlin.math.sign
+
+class KZoneOffset(val hours: Int, val minutes: Int) {
+    private val ms = hours.sign *
+            (hours.absoluteValue * KFixedTimeUnit.Hour.ratioToMillis + minutes * KFixedTimeUnit.Minute.ratioToMillis)
+
+    fun toMilliseconds(): Long = ms
+
+    fun toDisplayString(): String {
+        val s = StringBuilder()
+        if (ms == 0L) {
+            s.append("Z")
+        } else {
+            val offset = KDuration.of(ms.absoluteValue, KFixedTimeUnit.MilliSecond)
+            s.append(if (ms < 0) '-' else '+')
+            s.append(
+                "${offset.hourPart().toString().padStart(2, '0')}:${
+                    offset.minutePart().toString().padStart(2, '0')
+                }"
+            )
+        }
+        return s.toString()
+    }
+
+    override fun toString(): String {
+        return "${this::class.simpleName}(${toDisplayString()})"
+    }
+
+    companion object {
+        /**
+         * @param string format: "+08:00" or "-07:00" or "Z"
+         */
+        fun parseFrom(string: String): KZoneOffset {
+            if (string == "Z" || string == "UTC") {
+                return KZoneOffset(0, 0)
+            }
+
+            val hour = string.substringBefore(":").toInt()
+            val minute = string.substringAfter(":").toInt()
+            return KZoneOffset(hours = hour, minutes = minute)
+        }
+
+        fun fromMilliseconds(millis: Long): KZoneOffset {
+            val sign = if (millis >= 0) 1 else -1
+            val duration = KDuration.of(millis.absoluteValue, KFixedTimeUnit.MilliSecond)
+            return KZoneOffset(sign * duration.hourPart(), duration.minutePart())
+        }
+    }
+}
