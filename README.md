@@ -31,6 +31,12 @@ val lastTrainTime = localDateTime.copy(hour = 23, minute = 10, second = 0, milli
 println(KDateTimeFormatter.ISO8601_DATETIME.format(lastTrainTime)) // 2023-09-11T23:10:00+08:00
 ```
 
+## Conversions
+```kotlin
+val twoMinutes = KDuration.of(2, KFixedTimeUnit.Minute)
+println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
+```
+
 ## Arithmetic
 ```kotlin
 val tomorrow = now + KDuration.of(1, KFixedTimeUnit.Day)
@@ -39,3 +45,8 @@ println(KDateTimeFormatter.ISO8601_DATETIME.format(tomorrow)) // 2023-09-12T09:0
 val duration = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixedTimeUnit.Second)
 println(duration.format("mm:ss")) // 01:35
 ```
+
+# Limitations
+
+- `KInstant.now()` does not work in Windows
+- Only timestamps between year 1970 to 2999 are supported
