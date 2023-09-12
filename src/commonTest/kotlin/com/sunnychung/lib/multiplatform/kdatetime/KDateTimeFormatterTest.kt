@@ -3,6 +3,7 @@ package com.sunnychung.lib.multiplatform.kdatetime
 import com.sunnychung.lib.multiplatform.kdatetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class KDateTimeFormatterTest {
     @Test
@@ -39,5 +40,54 @@ class KDateTimeFormatterTest {
                 KDuration.of(34, KFixedTimeUnit.Second) +
                 KDuration.of(567, KFixedTimeUnit.MilliSecond)
         assertEquals("1:02:34.567", duration.format("H:mm:ss.lll"))
+    }
+
+    @Test
+    fun parseDateTimes() {
+        KDateTimeFormatter.FULL.parseToKZonedInstant("2023-09-11T11:49:31.789+08:00").let { dateTime ->
+            assertEquals(1694404171789, dateTime.toMilliseconds())
+            assertEquals(8, dateTime.zoneOffset.hours)
+            assertEquals(0, dateTime.zoneOffset.minutes)
+        }
+
+        KDateTimeFormatter.ISO8601_DATETIME.parseToKZonedInstant("2023-09-10T17:18:53-07:00").let { dateTime ->
+            assertEquals(1694391533000, dateTime.toMilliseconds())
+            assertEquals(-7, dateTime.zoneOffset.hours)
+            assertEquals(0, dateTime.zoneOffset.minutes)
+        }
+
+        KDateTimeFormatter.ISO8601_DATETIME.parseToKZonedInstant("2023-09-11T05:18:53+13:45").let { dateTime ->
+            assertEquals(1694360033000, dateTime.toMilliseconds())
+            assertEquals(13, dateTime.zoneOffset.hours)
+            assertEquals(45, dateTime.zoneOffset.minutes)
+        }
+
+        KDateTimeFormatter("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedInstant("23-09-11 02:54:19.230amZ").let { dateTime ->
+            assertEquals(1694400859230, dateTime.toMilliseconds())
+            assertEquals(0, dateTime.zoneOffset.hours)
+            assertEquals(0, dateTime.zoneOffset.minutes)
+        }
+
+        KDateTimeFormatter("yy-MM-dd hh:mm:ssaaZ").parseToKZonedInstant("23-09-11 02:54:19pmUTC").let { dateTime ->
+            assertEquals(1694444059000, dateTime.toMilliseconds())
+            assertEquals(0, dateTime.zoneOffset.hours)
+            assertEquals(0, dateTime.zoneOffset.minutes)
+        }
+    }
+
+    @Test
+    fun cannotParseWithoutEnoughFields() {
+        assertFailsWith(IllegalArgumentException::class) {
+            KDateTimeFormatter(pattern = "mm:ss").parseToKZonedInstant("anything")
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            KDateTimeFormatter(pattern = "yyyy-MM-dd").parseToKZonedInstant("anything")
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            KDateTimeFormatter(pattern = "yyyy-MM-dd hh:ss.lll").parseToKZonedInstant("anything")
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            KDateTimeFormatter(pattern = "MM-dd hh:mm:ss.lll").parseToKZonedInstant("anything")
+        }
     }
 }

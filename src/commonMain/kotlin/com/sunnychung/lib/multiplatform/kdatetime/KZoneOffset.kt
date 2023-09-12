@@ -38,7 +38,15 @@ class KZoneOffset(val hours: Int, val minutes: Int) {
                 return KZoneOffset(0, 0)
             }
 
-            val hour = string.substringBefore(":").toInt()
+            val hour = string.substringBefore(":").let {
+                if (it[0] == '+') {
+                    it.substring(1)
+                } else if (it[0] != '-') {
+                    throw IllegalArgumentException("The first character in zone offset should be either '+' or '-'.")
+                } else {
+                    it
+                }
+            }.toInt()
             val minute = string.substringAfter(":").toInt()
             return KZoneOffset(hours = hour, minutes = minute)
         }

@@ -2,6 +2,8 @@
 
 A Kotlin Multiplatform library to provide regular datetime functionality needed with very minimal platform dependencies. Same API set is provided to all JVM, JS, native targets.
 
+Before using this library, please read the relevant unit tests for well tested use cases. This library may not be stable to use out of these tested use cases.
+
 This library is currently under active development. Suggestions and contributions are welcomed!
 
 # APIs
@@ -10,16 +12,16 @@ Public classes / objects:
 - `KInstant` (single point of time)
 - `KZonedInstant` (single point of time + time zone offset)
 - `KZoneOffset` (time zone offset)
-- `KDuration` (a date-time range)
+- `KDuration` (a date-time length)
 - `KFixedTimeUnit` (time unit)
-- `KDateTimeFormatter` (format dates and times)
+- `KDateTimeFormatter` (format and parse dates and times)
 - `KGregorianCalendar` (conversion between timestamps and calendar dates)
 
 Unlike Java, there is no local date or local datetime class here. That creates lots of issues. `KZonedInstant` can be used instead.
 
 # Examples
 
-## Now, Time Zone Offset, Formatting, Calendar
+## Now, Time Zone Offset, Formatting, Calendar, Parsing
 ```kotlin
 val now = KInstant.now()
 println(now.toMilliseconds()) // 1694423218459
@@ -29,6 +31,12 @@ println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ")) // 2023-09-11T17:06:
 
 val lastTrainTime = localDateTime.copy(hour = 23, minute = 10, second = 0, millisecond = 0)
 println(KDateTimeFormatter.ISO8601_DATETIME.format(lastTrainTime)) // 2023-09-11T23:10:00+08:00
+
+val parsedDateTime = KDateTimeFormatter.ISO8601_DATETIME.parseToKZonedInstant("2023-09-10T17:18:53-07:00")
+println(parsedDateTime.toMilliseconds()) // 1694391533000
+
+val duration1 = KDuration.of(95, KFixedTimeUnit.Second)
+println(duration1.format("m:ss")) // 1:35
 ```
 
 ## Conversions
@@ -42,11 +50,14 @@ println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
 val tomorrow = now + KDuration.of(1, KFixedTimeUnit.Day)
 println(KDateTimeFormatter.ISO8601_DATETIME.format(tomorrow)) // 2023-09-12T09:06:58Z
 
-val duration = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixedTimeUnit.Second)
-println(duration.format("mm:ss")) // 01:35
+val duration2 = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixedTimeUnit.Second)
+println(duration2.format("mm:ss")) // 01:35
 ```
 
 # Limitations
-
-- `KInstant.now()` does not work in Windows
 - Only timestamps between year 1970 to 2999 are supported
+- Minimum time unit is millisecond
+
+# Known Issues
+- Date-time parser can only parse integers with exact length specified in the pattern. If this condition does not meet, exceptions might not be thrown, instead wrong result might be returned. 
+- In most of the cases, input values are not validated.

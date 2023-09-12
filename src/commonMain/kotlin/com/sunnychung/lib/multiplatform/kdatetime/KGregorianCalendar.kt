@@ -78,6 +78,11 @@ object KGregorianCalendar {
     }
 
     fun kZonedInstantFromLocalDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, millisecond: Int = 0, zoneOffset: KZoneOffset): KZonedInstant {
+        if (!(1..12).contains(month)) {
+            throw IllegalArgumentException("`month` must be 1 ~ 12.")
+        }
+        // TODO: validate all fields
+
         val monthLookupList = if (isLeapYear(year)) ACCUMULATED_DAYS_PER_MONTH_IN_LEAP_YEAR else ACCUMULATED_DAYS_PER_MONTH_IN_NON_LEAP_YEAR
         val msWithoutTimeZoneAdjustment = YEAR_TO_TIMESTAMP_MS_MAP[year]!! +
                 (monthLookupList[month - 1] + (day - 1)) * KFixedTimeUnit.Day.ratioToMillis +

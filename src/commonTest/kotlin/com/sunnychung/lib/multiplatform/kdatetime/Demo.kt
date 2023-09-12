@@ -15,13 +15,19 @@ class Demo {
         val lastTrainTime = localDateTime.copy(hour = 23, minute = 10, second = 0, millisecond = 0)
         println(KDateTimeFormatter.ISO8601_DATETIME.format(lastTrainTime)) // 2023-09-11T23:10:00+08:00
 
+        val parsedDateTime = KDateTimeFormatter.ISO8601_DATETIME.parseToKZonedInstant("2023-09-10T17:18:53-07:00")
+        println(parsedDateTime.toMilliseconds()) // 1694391533000
+
+        val duration1 = KDuration.of(95, KFixedTimeUnit.Second)
+        println(duration1.format("m:ss")) // 1:35
+
         val twoMinutes = KDuration.of(2, KFixedTimeUnit.Minute)
         println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
 
         val tomorrow = now + KDuration.of(1, KFixedTimeUnit.Day)
         println(KDateTimeFormatter.ISO8601_DATETIME.format(tomorrow)) // 2023-09-12T09:06:58Z
 
-        val duration = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixedTimeUnit.Second)
-        println(duration.format("mm:ss")) // 01:35
+        val duration2 = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixedTimeUnit.Second)
+        println(duration2.format("mm:ss")) // 01:35
     }
 }

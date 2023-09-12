@@ -148,8 +148,138 @@ class KDateTimeFormatter(pattern: String) {
         return s.toString()
     }
 
+    protected fun validateForFullValidParser() {
+        val tokenTypesList = tokens.map { it.type }
+            .filter { it != FormatTokenType.Literial }
+        val tokenTypesSet = tokenTypesList.toSet()
+
+        if (tokenTypesSet.size != tokenTypesList.size) {
+            throw IllegalArgumentException("A parser cannot have repeated fields")
+        }
+
+        if (!tokenTypesSet.containsAll(PARSER_COMPULSORY_INPUT_TYPES)) {
+            throw IllegalArgumentException("Missing compulsory fields in the pattern")
+        }
+
+        if (tokenTypesSet.contains(FormatTokenType.Hour_0_23)) {
+            if (tokenTypesSet.contains(FormatTokenType.Hour_1_12) || tokenTypesSet.contains(FormatTokenType.AMPM) || tokenTypesSet.contains(FormatTokenType.ampm)) {
+                throw IllegalArgumentException("Cannot contain contradicting fields in the pattern")
+            }
+        } else if (tokenTypesSet.contains(FormatTokenType.Hour_1_12)) {
+            if (!tokenTypesSet.contains(FormatTokenType.AMPM) && !tokenTypesSet.contains(FormatTokenType.ampm)) {
+                throw IllegalArgumentException("Missing compulsory fields in the pattern")
+            }
+        } else {
+            throw IllegalArgumentException("Missing compulsory fields in the pattern")
+        }
+    }
+
+    protected fun parseAmPm(input: String): Int {
+        return when (input.lowercase()) {
+            "am" -> AM
+            "pm" -> PM
+            else -> throw ParseDateTimeException()
+        }
+    }
+
+    fun parseToKZonedInstant(input: String): KZonedInstant {
+        validateForFullValidParser()
+
+        var year: Int? = null
+        var month: Int? = null
+        var dayOfMonth: Int? = null
+        var hour: Int? = null
+        var minute: Int? = null
+        var second: Int? = null
+        var millisecond: Int? = null
+        var amPm: Int? = null // am = 0, pm = 1
+        var zoneOffset: KZoneOffset? = null
+
+        var startIndex = 0
+        tokens.forEach { token ->
+            val inputSubstring = input.substring(startIndex, startIndex + token.length)
+            var length = token.length
+            if (token.type == FormatTokenType.Literial) {
+                if (inputSubstring != token.literal!!) {
+                    throw ParseDateTimeException()
+                }
+                startIndex += length
+                return@forEach // skip because no field to input
+            }
+
+            when (token.type) {
+                FormatTokenType.Year -> {
+                    year = inputSubstring.toInt()
+                    if (token.length == 2) {
+                        year = year!! + if (year!! >= 70) 1900 else 2000
+                    }
+                }
+                FormatTokenType.Month -> month = inputSubstring.toInt()
+                FormatTokenType.DayOfMonth -> dayOfMonth = inputSubstring.toInt()
+                FormatTokenType.Hour_0_23 -> hour = inputSubstring.toInt()
+                FormatTokenType.Hour_1_12 -> hour = inputSubstring.toInt()
+                FormatTokenType.Minute -> minute = inputSubstring.toInt()
+                FormatTokenType.Second -> second = inputSubstring.toInt()
+                FormatTokenType.Millisecond -> millisecond = inputSubstring.toInt()
+                FormatTokenType.ampm -> amPm = parseAmPm(inputSubstring)
+                FormatTokenType.AMPM -> amPm = parseAmPm(inputSubstring)
+                FormatTokenType.TimeZone -> {
+                    val longerSubstring = input.substring(startIndex)
+                    length = if (longerSubstring.startsWith("Z")) {
+                        1
+                    } else if (longerSubstring.startsWith("UTC")) {
+                        3
+                    } else {
+                        "+00:00".length
+                    }
+                    zoneOffset = KZoneOffset.parseFrom(longerSubstring.substring(0, length))
+                }
+                else -> {}
+            }
+            startIndex += length
+        }
+
+        if (!(1..12).contains(month)) {
+            throw ParseDateTimeException()
+        }
+
+        if (amPm != null) {
+            if (!(1..12).contains(hour)) {
+                throw ParseDateTimeException()
+            }
+            if (amPm == AM) {
+                if (hour == 12) hour = 0
+            } else if (amPm == PM) {
+                hour = (hour!! + 12) % 24
+            }
+        }
+
+        return KGregorianCalendar.kZonedInstantFromLocalDate(
+            year = year!!,
+            month = month!!,
+            day = dayOfMonth!!,
+            hour = hour ?: 0,
+            minute = minute ?: 0,
+            second = second ?: 0,
+            millisecond = millisecond ?: 0,
+            zoneOffset = zoneOffset!!
+        )
+    }
+
     companion object {
         val ISO8601_DATETIME = KDateTimeFormatter("yyyy-MM-dd'T'HH:mm:ssZ")
         val FULL = KDateTimeFormatter("yyyy-MM-dd'T'HH:mm:ss.lllZ")
+
+        internal val PARSER_COMPULSORY_INPUT_TYPES = setOf(
+            FormatTokenType.Year,
+            FormatTokenType.Month,
+            FormatTokenType.DayOfMonth,
+            FormatTokenType.Minute,
+            FormatTokenType.Second,
+            FormatTokenType.TimeZone
+        )
+
+        private val AM = 0
+        private val PM = 1
     }
 }
