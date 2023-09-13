@@ -1,6 +1,6 @@
 # KDateTime Multiplatform
 
-A Kotlin Multiplatform library to provide regular datetime functionality needed with very minimal platform dependencies. Same API set is provided to all JVM, JS, native targets.
+A Kotlin Multiplatform library to provide regular datetime functionality needed with very minimal platform dependencies. It means upgrading OS / platform SDK target versions would not break your application. Same core API set is provided to all JVM, iOS, JS targets.
 
 Before using this library, please read the relevant unit tests for well tested use cases. This library may not be stable to use out of these tested use cases.
 
