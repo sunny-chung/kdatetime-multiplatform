@@ -14,6 +14,10 @@ open class KInstant(private val timestampMs: Long) : KDateTimeFormattable {
         return "${this::class.simpleName}(${KDateTimeFormatter.FULL.format(this)})"
     }
 
+    fun atZoneOffset(zoneOffset: KZoneOffset): KZonedInstant {
+        return KZonedInstant(timestampMs = timestampMs, zoneOffset = zoneOffset)
+    }
+
     companion object {
         fun now(): KInstant = kInstantOfCurrentTime()
     }
