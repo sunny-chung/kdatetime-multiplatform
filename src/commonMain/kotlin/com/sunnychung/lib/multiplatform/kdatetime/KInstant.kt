@@ -1,6 +1,6 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
-open class KInstant(val timestampMs: Long) : KDateTimeFormattable {
+open class KInstant(private val timestampMs: Long) : KDateTimeFormattable {
 
     operator fun plus(duration: KDuration): KInstant {
         return KInstant(timestampMs + duration.millis)

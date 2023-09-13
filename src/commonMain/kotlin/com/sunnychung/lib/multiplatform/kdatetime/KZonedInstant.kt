@@ -1,6 +1,6 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
-open class KZonedInstant(timestampMs: Long, val zoneOffset: KZoneOffset) : KInstant(timestampMs) {
+open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOffset) : KDateTimeFormattable {
 
     constructor(timestampMs: Long, zoneOffsetMs: Long) : this(
         timestampMs = timestampMs,
@@ -11,6 +11,16 @@ open class KZonedInstant(timestampMs: Long, val zoneOffset: KZoneOffset) : KInst
         timestampMs = timestampMs,
         zoneOffset = KZoneOffset.parseFrom(zoneOffsetString)
     )
+
+    override fun toMilliseconds(): Long = timestampMs
+
+    override fun toString(): String {
+        return "${this::class.simpleName}(${KDateTimeFormatter.FULL.format(this)})"
+    }
+
+    operator fun plus(duration: KDuration): KZonedInstant {
+        return KZonedInstant(timestampMs + duration.millis, zoneOffset)
+    }
 
     fun startOfDay(): KZonedInstant {
         return copy(hour = 0, minute = 0, second = 0, millisecond = 0)
