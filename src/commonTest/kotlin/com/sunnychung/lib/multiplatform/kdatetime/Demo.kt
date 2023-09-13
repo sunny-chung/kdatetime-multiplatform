@@ -15,6 +15,8 @@ class Demo {
         val localDateTime = KZonedInstant(now.toMilliseconds(), KZoneOffset(8, 0))
         println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ")) // 2023-09-11T17:06:58.459+08:00
 
+        println(KZonedInstant.nowAtLocalZoneOffset()) // KZonedInstant(2023-09-13T22:52:45.765+08:00)
+
         val lastTrainTime = localDateTime.copy(hour = 23, minute = 10, second = 0, millisecond = 0)
         println(KDateTimeFormatter.ISO8601_DATETIME.format(lastTrainTime)) // 2023-09-11T23:10:00+08:00
 

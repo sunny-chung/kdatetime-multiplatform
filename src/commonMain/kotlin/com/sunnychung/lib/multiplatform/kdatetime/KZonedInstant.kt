@@ -52,4 +52,11 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
             zoneOffset = zoneOffset
         )
     }
+
+    companion object {
+        fun nowAtLocalZoneOffset(): KZonedInstant = KZonedInstant(
+            timestampMs = KInstant.now().toMilliseconds(),
+            zoneOffset = KZoneOffset.local()
+        )
+    }
 }
