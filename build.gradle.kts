@@ -17,6 +17,11 @@ kotlin {
             useJUnitPlatform()
         }
     }
+    val darwinTargets = listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+        iosX64()
+    )
     js(BOTH) {
         browser {
             commonWebpackConfig {
@@ -46,9 +51,19 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
+        val darwinMain by creating {
+            dependsOn(commonMain)
+        }
+        val darwinTest by creating {
+            dependsOn(commonTest)
+        }
         val jsMain by getting
         val jsTest by getting
         val nativeMain by getting
         val nativeTest by getting
-    }
+
+        configure(darwinTargets) {
+            compilations["main"].defaultSourceSet.dependsOn(darwinMain)
+            compilations["test"].defaultSourceSet.dependsOn(darwinTest)
+        }
 }

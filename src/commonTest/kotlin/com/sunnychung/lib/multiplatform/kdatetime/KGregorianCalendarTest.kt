@@ -70,7 +70,7 @@ class KGregorianCalendarTest {
 
     @Test
     fun convertTimestampToUTCDate_performance() {
-        val SAMPLE_SIZE = 500_000 /* JS is slow */
+        val SAMPLE_SIZE = 300_000 /* JS is slow (500,000), iOS simulator is even slower (300,000) */
         val TIME_LIMIT_SECONDS = 1
 
         val random = Random.Default
