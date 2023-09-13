@@ -9,6 +9,9 @@ class Demo {
         val now = KInstant.now()
         println(now.toMilliseconds()) // 1694423218459
 
+        val localZoneOffset = KZoneOffset.local()
+        println(localZoneOffset.toDisplayString()) // +08:00
+
         val localDateTime = KZonedInstant(now.toMilliseconds(), KZoneOffset(8, 0))
         println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ")) // 2023-09-11T17:06:58.459+08:00
 

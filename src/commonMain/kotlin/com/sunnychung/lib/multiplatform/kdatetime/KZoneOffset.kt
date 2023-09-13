@@ -56,5 +56,9 @@ class KZoneOffset(val hours: Int, val minutes: Int) {
             val duration = KDuration.of(millis.absoluteValue, KFixedTimeUnit.MilliSecond)
             return KZoneOffset(sign * duration.hourPart(), duration.minutePart())
         }
+
+        fun local(): KZoneOffset = localZoneOffset()
     }
 }
+
+internal expect fun localZoneOffset(): KZoneOffset

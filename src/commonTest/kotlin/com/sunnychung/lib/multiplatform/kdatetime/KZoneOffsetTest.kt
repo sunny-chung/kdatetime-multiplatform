@@ -1,5 +1,8 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.offsetAt
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,5 +23,15 @@ class KZoneOffsetTest {
         assertEquals("-07:00", KZoneOffset(-7, 0).toDisplayString())
         assertEquals("-05:30", KZoneOffset(-5, 30).toDisplayString())
         assertEquals("+13:45", KZoneOffset(13, 45).toDisplayString())
+    }
+
+    /**
+     * This test only tests against system time zone at current time.
+     * This means the test result may differ over time.
+     */
+    @Test
+    fun localZoneOffset() {
+        val currentZoneOffsetSeconds = TimeZone.currentSystemDefault().offsetAt(Clock.System.now()).totalSeconds
+        assertEquals(currentZoneOffsetSeconds * 1000L, KZoneOffset.local().toMilliseconds())
     }
 }
