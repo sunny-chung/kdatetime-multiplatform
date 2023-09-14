@@ -64,6 +64,59 @@ val duration2 = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixed
 println(duration2.format("mm:ss")) // 01:35
 ```
 
+## Compatibility with platform-specific datetime APIs
+### From Kotlin side
+[iOS](src/darwinMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/KDateTime.kt),
+[JS](src/jsMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/JsPlatformDatetimeConversion.kt),
+[JVM](src/jvmMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/JvmPlatformDatetimeConversion.kt)
+
+For example, for iOS targets:
+```kotlin
+val instant: KInstant = NSDate().toKInstant()
+val date: NSDate = instant.toNSDate()
+```
+
+### From native side
+iOS
+```swift
+let instant: KInstant = KInstant.Companion.shared.now() as KInstant
+let iosDate: Date = instant.toNSDate()
+let instant2: KInstant = KDateTimeKt.KInstantFrom(date: iosDate)
+```
+
+# Getting Started
+
+## First Step
+
+In the KMM / KMP application build.gradle.kts, include the dependency in the `commonMain` source set.
+```kotlin
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api("com.sunnychung.multiplatform:kdatetime-multiplatform:0.1.0-SNAPSHOT")
+                // ...
+            }
+        }
+        // ...
+```
+
+After that, you can use KDateTime in any source set that depends on `commonMain` in Kotlin side.
+
+## To Use KDateTime in Swift / Objective-C
+Add a transitive export to the `framework` DSL:
+```kotlin
+        framework {
+            baseName = "shared"
+            transitiveExport = true
+            export("com.sunnychung.multiplatform:kdatetime-multiplatform:0.1.0-SNAPSHOT")
+        }
+```
+
+In native side, import your common framework to use.
+```swift
+import shared
+```
+
 # Limitations
 - Only timestamps between year 1970 to 2999 are supported
 - Minimum time unit is millisecond
