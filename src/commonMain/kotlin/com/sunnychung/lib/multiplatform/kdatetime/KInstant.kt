@@ -29,6 +29,15 @@ open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPoin
 
     companion object {
         fun now(): KInstant = kInstantOfCurrentTime()
+
+        fun parseFrom(input: String, formats: List<KDateTimeFormat>): KInstant {
+            formats.forEach { format ->
+                try {
+                    return format.parseToKInstant(input = input)
+                } catch (e: ParseDateTimeException) { /* ignore */ }
+            }
+            throw ParseDateTimeException()
+        }
     }
 }
 
