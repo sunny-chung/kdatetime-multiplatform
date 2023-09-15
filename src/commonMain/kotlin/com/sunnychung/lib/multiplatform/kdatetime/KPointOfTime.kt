@@ -13,4 +13,8 @@ abstract class KPointOfTime : Comparable<KPointOfTime> {
         }
         return false
     }
+
+    operator fun minus(other: KPointOfTime): KDuration {
+        return KDuration(this.toEpochMilliseconds() - other.toEpochMilliseconds())
+    }
 }

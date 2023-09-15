@@ -64,6 +64,9 @@ val duration2 = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixed
 println(duration2.format("mm:ss")) // 01:35
 
 println(tomorrow.atZoneOffset(KZoneOffset(-7, 0)) > now.atZoneOffset(KZoneOffset(8, 0))) // true
+
+val oneDay = tomorrow - now
+println(oneDay.toMilliseconds()) // 86400000
 ```
 
 ## Compatibility with platform-specific datetime APIs
