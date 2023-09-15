@@ -27,5 +27,5 @@ interface KDateTimeFormattable {
         return timePartMs.toInt()
     }
 
-    fun format(pattern: String) = KDateTimeFormatter(pattern).format(this)
+    fun format(pattern: String) = KDateTimeFormat(pattern).format(this)
 }

@@ -15,7 +15,7 @@ open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPoin
     }
 
     override fun toString(): String {
-        return "${this::class.simpleName}(${KDateTimeFormatter.FULL.format(this)})"
+        return "${this::class.simpleName}(${KDateTimeFormat.FULL.format(this)})"
     }
 
     fun atZoneOffset(zoneOffset: KZoneOffset): KZonedInstant {

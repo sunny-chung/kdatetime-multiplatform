@@ -1,7 +1,5 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
-import kotlin.math.absoluteValue
-
 /**
  * Formats:
  *
@@ -24,7 +22,7 @@ import kotlin.math.absoluteValue
  *
  * '        Literal         '
  */
-class KDateTimeFormatter(pattern: String) {
+class KDateTimeFormat(pattern: String) {
 
     enum class FormatTokenType(val hasLengthLimit: Boolean = true, val allowedLengths: List<Int> = listOf()) {
         Literial(hasLengthLimit = false),
@@ -272,8 +270,8 @@ class KDateTimeFormatter(pattern: String) {
     }
 
     companion object {
-        val ISO8601_DATETIME = KDateTimeFormatter("yyyy-MM-dd'T'HH:mm:ssZ")
-        val FULL = KDateTimeFormatter("yyyy-MM-dd'T'HH:mm:ss.lllZ")
+        val ISO8601_DATETIME = KDateTimeFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+        val FULL = KDateTimeFormat("yyyy-MM-dd'T'HH:mm:ss.lllZ")
 
         internal val PARSER_COMPULSORY_INPUT_TYPES = setOf(
             FormatTokenType.Year,
