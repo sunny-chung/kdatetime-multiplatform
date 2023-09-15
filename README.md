@@ -55,13 +55,15 @@ val twoMinutes = KDuration.of(2, KFixedTimeUnit.Minute)
 println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
 ```
 
-## Arithmetic
+## Arithmetic, Comparison
 ```kotlin
 val tomorrow = now + KDuration.of(1, KFixedTimeUnit.Day)
 println(KDateTimeFormatter.ISO8601_DATETIME.format(tomorrow)) // 2023-09-14T15:17:22Z
 
 val duration2 = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixedTimeUnit.Second)
 println(duration2.format("mm:ss")) // 01:35
+
+println(tomorrow.atZoneOffset(KZoneOffset(-7, 0)) > now.atZoneOffset(KZoneOffset(8, 0))) // true
 ```
 
 ## Compatibility with platform-specific datetime APIs
