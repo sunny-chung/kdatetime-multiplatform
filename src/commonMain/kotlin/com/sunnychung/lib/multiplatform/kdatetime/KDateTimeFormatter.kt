@@ -266,6 +266,11 @@ class KDateTimeFormatter(pattern: String) {
         )
     }
 
+    fun parseToKInstant(input: String): KInstant {
+        val instantWithZone = parseToKZonedInstant(input = input)
+        return instantWithZone.dropZoneOffset()
+    }
+
     companion object {
         val ISO8601_DATETIME = KDateTimeFormatter("yyyy-MM-dd'T'HH:mm:ssZ")
         val FULL = KDateTimeFormatter("yyyy-MM-dd'T'HH:mm:ss.lllZ")

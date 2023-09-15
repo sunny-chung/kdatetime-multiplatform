@@ -43,7 +43,7 @@ class KDateTimeFormatterTest {
     }
 
     @Test
-    fun parseDateTimes() {
+    fun parseDateTimeToKZonedInstant() {
         KDateTimeFormatter.FULL.parseToKZonedInstant("2023-09-11T11:49:31.789+08:00").let { dateTime ->
             assertEquals(1694404171789, dateTime.toMilliseconds())
             assertEquals(8, dateTime.zoneOffset.hours)
@@ -72,6 +72,13 @@ class KDateTimeFormatterTest {
             assertEquals(1694444059000, dateTime.toMilliseconds())
             assertEquals(0, dateTime.zoneOffset.hours)
             assertEquals(0, dateTime.zoneOffset.minutes)
+        }
+    }
+
+    @Test
+    fun parseDateTimeToKInstant() {
+        KDateTimeFormatter.FULL.parseToKInstant("2023-09-11T11:49:31.789+08:00").let { dateTime ->
+            assertEquals(1694404171789, dateTime.toMilliseconds())
         }
     }
 
