@@ -34,6 +34,10 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
         return copy(hour = 0, minute = 0, second = 0, millisecond = 0)
     }
 
+    internal fun offsetedInstant(): KInstant = KInstant(timestampMs + zoneOffset.toMilliseconds())
+
+    fun datePart(): KDate = KGregorianCalendar.utcDateFromTimestamp(offsetedInstant().toMilliseconds())
+
     fun copy(
         year: Int? = null,
         month: Int? = null,
@@ -44,7 +48,7 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
         millisecond: Int? = null
    ): KZonedInstant {
         val localDateTime by lazy {
-            KInstant(timestampMs + zoneOffset.toMilliseconds())
+            offsetedInstant()
         }
         val localDate by lazy {
             KGregorianCalendar.utcDateFromTimestamp(localDateTime.toMilliseconds())

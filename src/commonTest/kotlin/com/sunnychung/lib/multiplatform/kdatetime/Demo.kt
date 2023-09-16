@@ -31,6 +31,7 @@ class Demo {
 
         val duration1 = KDuration.of(95, KFixedTimeUnit.Second)
         println(duration1.format("m:ss")) // 1:35
+        println(duration1.format("m'm' s's'")) // 1m 35s
 
         /* Conversions */
 

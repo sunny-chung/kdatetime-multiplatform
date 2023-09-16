@@ -53,7 +53,7 @@ object KGregorianCalendar {
         }
     }
 
-    fun utcDateFromTimestamp(timestampMs: Long): KDate {
+    internal fun utcDateFromTimestamp(timestampMs: Long): KDate {
         val index = binarySearchIndexForInclusiveStartExclusiveEnd(YEAR_TO_TIMESTAMP_MS_LIST) {
             it.timestampMs.compareTo(timestampMs)
         }
