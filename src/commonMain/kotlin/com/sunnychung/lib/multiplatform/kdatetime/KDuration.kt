@@ -1,6 +1,9 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
-open class KDuration internal constructor(val millis: Long) : KDateTimeFormattable {
+import com.sunnychung.lib.multiplatform.kdatetime.annotation.AndroidParcelize
+
+@AndroidParcelize
+open class KDuration internal constructor(val millis: Long) : KDateTimeFormattable, AndroidParcelable {
 
     override fun toMilliseconds(): Long = millis
 

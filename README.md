@@ -76,7 +76,7 @@ println(oneDay.toMilliseconds()) // 86400000
 ```
 
 ## Serialization, Deserialization
-This library supports `kotlinx.serialization` out of the box, to allow conversion between KDateTime classes and string from/to JSON, protobuf, etc.. Read [examples here](src/commonTest/kotlin/com/sunnychung/lib/multiplatform/kdatetime/SerializerTest.kt).
+This library supports `kotlinx.serialization` out of the box (except `KDuration`), to allow conversion between KDateTime classes and string from/to JSON, protobuf, etc.. Read [examples here](src/commonTest/kotlin/com/sunnychung/lib/multiplatform/kdatetime/SerializerTest.kt).
 
 Besides, an additional type `KInstantAsLong` is provided for converting between timestamp in milliseconds (`Long`) and `KInstant`.
 
@@ -84,7 +84,7 @@ Besides, an additional type `KInstantAsLong` is provided for converting between 
 ### From Kotlin side
 [iOS](src/darwinMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/KDateTime.kt),
 [JS](src/jsMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/JsPlatformDatetimeConversion.kt),
-[JVM](src/jvmMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/JvmPlatformDatetimeConversion.kt)
+[JVM](src/commonJvmMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/JvmPlatformDatetimeConversion.kt)
 
 For example, for iOS targets:
 ```kotlin
@@ -99,6 +99,9 @@ let instant: KInstant = KInstant.Companion.shared.now() as KInstant
 let iosDate: Date = instant.toNSDate()
 let instant2: KInstant = KDateTimeKt.KInstantFrom(date: iosDate)
 ```
+
+### For Android
+The classes `KInstant`, `KZonedInstant`, `KZoneOffset`, `KDuration` implement `Parcelable`.
 
 # Getting Started
 

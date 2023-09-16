@@ -1,10 +1,12 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import com.sunnychung.lib.multiplatform.kdatetime.annotation.AndroidParcelize
 import com.sunnychung.lib.multiplatform.kdatetime.serializer.KInstantSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable(with = KInstantSerializer::class)
-open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPointOfTime() {
+@AndroidParcelize
+open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPointOfTime(), AndroidParcelable {
 
     operator fun plus(duration: KDuration): KInstant {
         return KInstant(timestampMs + duration.millis)
