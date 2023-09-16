@@ -2,7 +2,7 @@ plugins {
     kotlin("multiplatform") version "1.8.21"
 
     // using a compatible version with IntelliJ IDEA Android plugin, so that the "androidMain" sourceset can be recognized
-    id("com.android.library") version "7.3.1"
+    id("com.android.library") version "8.0.2"
 
     kotlin("plugin.serialization") version "1.8.21"
     kotlin("plugin.parcelize") version "1.8.21"
@@ -81,14 +81,22 @@ kotlin {
                 implementation("org.jetbrains.kotlin:kotlin-parcelize-runtime:1.8.21")
             }
         }
+        val androidTest by creating {
+            dependsOn(commonJvmTest)
+            dependsOn(androidMain)
+        }
         val nonAndroidJvmMain by creating {
             dependsOn(commonJvmMain)
+        }
+        val nonAndroidJvmTest by creating {
+            dependsOn(commonJvmTest)
+            dependsOn(nonAndroidJvmMain)
         }
         val jvmMain by getting {
             dependsOn(nonAndroidJvmMain)
         }
         val jvmTest by getting {
-            dependsOn(commonJvmTest)
+            dependsOn(nonAndroidJvmTest)
         }
         val darwinMain by creating {
             dependsOn(commonMain)
