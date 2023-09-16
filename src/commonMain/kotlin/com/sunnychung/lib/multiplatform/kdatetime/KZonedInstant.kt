@@ -66,9 +66,11 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
     }
 
     companion object {
-        fun nowAtLocalZoneOffset(): KZonedInstant = KZonedInstant(
+        fun nowAtLocalZoneOffset(): KZonedInstant = nowAtZoneOffset(zoneOffset = KZoneOffset.local())
+
+        fun nowAtZoneOffset(zoneOffset: KZoneOffset): KZonedInstant = KZonedInstant(
             timestampMs = KInstant.now().toMilliseconds(),
-            zoneOffset = KZoneOffset.local()
+            zoneOffset = zoneOffset
         )
 
         fun parseFrom(input: String, formats: List<KDateTimeFormat>): KZonedInstant {
