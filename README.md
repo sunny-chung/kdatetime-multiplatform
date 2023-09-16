@@ -17,9 +17,13 @@ Public classes / objects:
 - `KDateTimeFormat` (format and parse dates and times)
 - `KGregorianCalendar` (conversion between timestamps and calendar dates)
 
-Unlike Java, there is no local date or local datetime class here. That creates lots of issues. `KZonedInstant` can be used instead.
+Unlike Java, there is no local date or local datetime class here. That creates lots of usage issues. `KZonedInstant` can be used instead.
 
 There is also no time zone but time zone offset at this moment.
+
+All of these classes are thread-safe.
+
+Supported custom format pattern symbols can be checked [here](src/commonMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/KDateTimeFormat.kt). It has some difference with Java APIs.
 
 # Examples
 
@@ -33,6 +37,7 @@ println(localZoneOffset.toDisplayString()) // +08:00
 
 val localDateTime = now.atZoneOffset(localZoneOffset)
 println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ")) // 2023-09-13T23:17:22.720+08:00
+println(localDateTime.format("yyyy-MM-dd h:mm:ss aa")) // 2023-09-13 11:17:22 pm
 
 println(KZonedInstant.nowAtLocalZoneOffset()) // KZonedInstant(2023-09-13T23:17:22.722+08:00)
 
@@ -125,6 +130,7 @@ import shared
 # Limitations
 - Only timestamps between year 1970 to 2999 are supported
 - Minimum time unit is millisecond
+- Only English is supported for locale-specific inputs and outputs
 
 # Known Issues
 - Date-time parser can only parse integers with exact length specified in the pattern. If this condition does not meet, exceptions might not be thrown, instead wrong result might be returned. 
