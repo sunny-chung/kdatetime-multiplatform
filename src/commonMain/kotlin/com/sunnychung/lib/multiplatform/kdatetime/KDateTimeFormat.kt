@@ -22,7 +22,7 @@ package com.sunnychung.lib.multiplatform.kdatetime
  *
  * '        Literal         '
  */
-class KDateTimeFormat(pattern: String) {
+class KDateTimeFormat(val pattern: String) {
 
     enum class FormatTokenType(val hasLengthLimit: Boolean = true, val allowedLengths: List<Int> = listOf()) {
         Literial(hasLengthLimit = false),

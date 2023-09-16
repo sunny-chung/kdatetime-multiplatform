@@ -1,6 +1,12 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
-open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOffset) : KDateTimeFormattable, KPointOfTime() {
+import com.sunnychung.lib.multiplatform.kdatetime.annotation.AndroidParcelize
+import com.sunnychung.lib.multiplatform.kdatetime.serializer.KZonedInstantSerializer
+import kotlinx.serialization.Serializable
+
+@Serializable(with = KZonedInstantSerializer::class)
+@AndroidParcelize
+open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOffset) : KDateTimeFormattable, KPointOfTime(), AndroidParcelable {
 
     constructor(timestampMs: Long, zoneOffsetMs: Long) : this(
         timestampMs = timestampMs,
@@ -73,6 +79,10 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
             zoneOffset = zoneOffset
         )
 
+        /**
+         * @param formats Order matters. Formats are tried one by one.
+         * @throws ParseDateTimeException
+         */
         fun parseFrom(input: String, formats: List<KDateTimeFormat>): KZonedInstant {
             formats.forEach { format ->
                 try {

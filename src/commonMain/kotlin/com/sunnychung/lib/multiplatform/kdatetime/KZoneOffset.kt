@@ -1,9 +1,11 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import com.sunnychung.lib.multiplatform.kdatetime.annotation.AndroidParcelize
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
-class KZoneOffset(val hours: Int, val minutes: Int) {
+@AndroidParcelize
+class KZoneOffset(val hours: Int, val minutes: Int) : AndroidParcelable {
     private val ms = hours.sign *
             (hours.absoluteValue * KFixedTimeUnit.Hour.ratioToMillis + minutes * KFixedTimeUnit.Minute.ratioToMillis)
 

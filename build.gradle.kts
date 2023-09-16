@@ -1,5 +1,12 @@
 plugins {
     kotlin("multiplatform") version "1.8.21"
+
+    // using a compatible version with IntelliJ IDEA Android plugin, so that the "androidMain" sourceset can be recognized
+    id("com.android.library") version "7.3.1"
+
+    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("plugin.parcelize") version "1.8.21"
+    id("maven-publish")
 }
 
 group = "com.sunnychung.multiplatform"
@@ -7,15 +14,24 @@ version = "0.1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    google()
 }
 
 kotlin {
     jvm {
         jvmToolchain(8)
-        withJava()
+//        withJava() // not compatiable with Android Gradle plugin
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
         }
+    }
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+        publishAllLibraryVariants()
     }
     val darwinTargets = listOf(
         iosArm64(),
@@ -42,15 +58,38 @@ kotlin {
 
     
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1") // 1.6.0
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
             }
         }
-        val jvmMain by getting
-        val jvmTest by getting
+        val commonJvmMain by creating {
+            dependsOn(commonMain)
+        }
+        val commonJvmTest by creating {
+            dependsOn(commonMain)
+        }
+        val androidMain by getting {
+            dependsOn(commonJvmMain)
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-parcelize-runtime:1.8.21")
+            }
+        }
+        val nonAndroidJvmMain by creating {
+            dependsOn(commonJvmMain)
+        }
+        val jvmMain by getting {
+            dependsOn(nonAndroidJvmMain)
+        }
+        val jvmTest by getting {
+            dependsOn(commonJvmTest)
+        }
         val darwinMain by creating {
             dependsOn(commonMain)
         }
@@ -66,4 +105,13 @@ kotlin {
             compilations["main"].defaultSourceSet.dependsOn(darwinMain)
             compilations["test"].defaultSourceSet.dependsOn(darwinTest)
         }
+    }
+}
+
+android {
+    namespace = "com.sunnychung.lib.android.kdatetime"
+    compileSdk = 33
+    defaultConfig {
+        minSdk = 24
+    }
 }

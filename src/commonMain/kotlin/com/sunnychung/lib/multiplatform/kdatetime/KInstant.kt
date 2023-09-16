@@ -30,6 +30,10 @@ open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPoin
     companion object {
         fun now(): KInstant = kInstantOfCurrentTime()
 
+        /**
+         * @param formats Order matters. Formats are tried one by one.
+         * @throws ParseDateTimeException
+         */
         fun parseFrom(input: String, formats: List<KDateTimeFormat>): KInstant {
             formats.forEach { format ->
                 try {
