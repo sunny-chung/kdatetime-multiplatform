@@ -1,5 +1,6 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import com.sunnychung.lib.multiplatform.kdatetime.serializer.KInstantAsLong
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -9,6 +10,7 @@ import kotlin.test.assertEquals
 
 class SerializerTest {
     @Serializable data class KInstantData(val data: KInstant)
+    @Serializable data class KInstantAsLongData(val data: KInstantAsLong)
     @Serializable data class KZonedInstantData(val data: KZonedInstant)
 
     @Test
@@ -36,6 +38,20 @@ class SerializerTest {
     fun deserializeKInstant() {
         val json = "{\"data\":\"2023-09-16T11:03:09.674Z\"}"
         val data = Json.decodeFromString<KInstantData>(json)
+        assertEquals(1694862189674, data.data.toEpochMilliseconds())
+    }
+
+    @Test
+    fun serializeKInstantAsLong() {
+        val data = KInstantAsLongData(KInstant.parseFrom(input = "2023-09-16T19:03:09.674+08:00", formats = listOf(KDateTimeFormat.FULL)))
+        val json = Json.encodeToString(data)
+        assertEquals("{\"data\":1694862189674}", json)
+    }
+
+    @Test
+    fun deserializeKInstantAsLong() {
+        val json = "{\"data\":1694862189674}"
+        val data = Json.decodeFromString<KInstantAsLongData>(json)
         assertEquals(1694862189674, data.data.toEpochMilliseconds())
     }
 

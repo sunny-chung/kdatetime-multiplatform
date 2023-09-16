@@ -75,6 +75,11 @@ val oneDay = tomorrow - now
 println(oneDay.toMilliseconds()) // 86400000
 ```
 
+## Serialization, Deserialization
+This library supports `kotlinx.serialization` out of the box, to allow conversion between KDateTime classes and string from/to JSON, protobuf, etc.. Read [examples here](src/commonTest/kotlin/com/sunnychung/lib/multiplatform/kdatetime/SerializerTest.kt).
+
+Besides, an additional type `KInstantAsLong` is provided for converting between timestamp in milliseconds (`Long`) and `KInstant`.
+
 ## Compatibility with platform-specific datetime APIs
 ### From Kotlin side
 [iOS](src/darwinMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/KDateTime.kt),
