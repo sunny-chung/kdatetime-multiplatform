@@ -136,3 +136,9 @@ import shared
 # Known Issues
 - Date-time parser can only parse integers with exact length specified in the pattern. If this condition does not meet, exceptions might not be thrown, instead wrong result might be returned. 
 - In most of the cases, input values are not validated.
+
+# For Developers
+
+This section is only for developers who are interested in compiling or modifying this library.
+
+1. This project does not support IntelliJ IDEA but Android Studio. Because IntelliJ IDEA of the latest version does not support Android Gradle plugin 8.0.2, but downgrading it to 7.3.1 would encounter some compilation bugs. 

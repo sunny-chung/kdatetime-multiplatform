@@ -50,5 +50,10 @@ class Demo {
 
         val oneDay = tomorrow - now
         println(oneDay.toMilliseconds()) // 86400000
+
+        val sortedInstants = listOf(1694618242720, 1694618242723, 1694618242721, 1694618242722)
+            .map { KInstant(it) }
+            .sorted()
+        println(sortedInstants) // [KInstant(2023-09-13T15:17:22.720Z), KInstant(2023-09-13T15:17:22.721Z), KInstant(2023-09-13T15:17:22.722Z), KInstant(2023-09-13T15:17:22.723Z)]
     }
 }
