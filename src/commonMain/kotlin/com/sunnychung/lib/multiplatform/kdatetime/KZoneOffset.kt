@@ -1,9 +1,12 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
 import com.sunnychung.lib.multiplatform.kdatetime.annotation.AndroidParcelize
+import com.sunnychung.lib.multiplatform.kdatetime.serializer.KZoneOffsetSerializer
+import kotlinx.serialization.Serializable
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
+@Serializable(with = KZoneOffsetSerializer::class)
 @AndroidParcelize
 class KZoneOffset(val hours: Int, val minutes: Int) : AndroidParcelable {
     private val ms = hours.sign *
