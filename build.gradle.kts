@@ -60,13 +60,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1") // 1.6.0
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.1")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
             }
         }
         val commonJvmMain by creating {
