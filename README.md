@@ -56,9 +56,21 @@ println(duration1.format("m'm' s's'")) // 1m 35s
 ```
 
 ## Conversions
+Time unit conversions.
 ```kotlin
 val twoMinutes = KDuration.of(2, KFixedTimeUnit.Minute)
 println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
+```
+
+For platforms that do not have a single type storing timestamp + time zone offset, and you must use
+their native type for whatever reason (perhaps to use a UI library),
+below tedious conversion may meet your need:
+```swift
+var departureLocalDate: Date // from user input, displayed in +09:00 time zone, but storing timestamp in device time zone
+
+// convert that suspicious date-time object back to the correct timestamp
+let startAfter = KDateTimeKt.toKZonedInstant(departureLocalDate, zoneOffset: KZoneOffset.companion.local())
+    .doCopy(year: nil, month: nil, day: nil, hour: nil, minute: nil, second: nil, millisecond: nil, zoneOffset: KZoneOffset(hours: 9, minutes: 0))
 ```
 
 ## Arithmetic, Comparison

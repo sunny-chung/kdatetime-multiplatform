@@ -45,7 +45,8 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
         hour: Int? = null,
         minute: Int? = null,
         second: Int? = null,
-        millisecond: Int? = null
+        millisecond: Int? = null,
+        zoneOffset: KZoneOffset? = null
    ): KZonedInstant {
         val localDateTime by lazy {
             offsetedInstant()
@@ -61,7 +62,7 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
             minute = minute ?: localDateTime.minutePart(),
             second = second ?: localDateTime.secondPart(),
             millisecond = millisecond ?: localDateTime.millisecondPart(),
-            zoneOffset = zoneOffset
+            zoneOffset = zoneOffset ?: this.zoneOffset
         )
     }
 
