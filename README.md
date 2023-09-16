@@ -1,6 +1,6 @@
 # KDateTime Multiplatform
 
-A Kotlin Multiplatform library to provide regular datetime functionality needed with very minimal platform dependencies. It means upgrading OS / platform SDK target versions would not break your application. Same core API set is provided to all JVM, iOS, JS targets.
+A Kotlin Multiplatform library to provide *regular date-time functionality needed with very minimal platform dependencies*. It means upgrading OS / platform SDK target versions would not break your application. Same core API set is provided to all JVM, iOS, JS targets.
 
 Before using this library, please read the relevant unit tests for well tested use cases. This library may not be stable to use out of these tested use cases.
 
@@ -21,7 +21,7 @@ Unlike Java, there is no local date or local datetime class here. That creates l
 
 There is also no time zone but time zone offset at this moment.
 
-All of these classes are thread-safe.
+All of these classes are *thread-safe*.
 
 Supported custom format pattern symbols can be checked [here](src/commonMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/KDateTimeFormat.kt). It has some difference with Java APIs.
 
@@ -85,6 +85,11 @@ println(tomorrow.atZoneOffset(KZoneOffset(-7, 0)) > now.atZoneOffset(KZoneOffset
 
 val oneDay = tomorrow - now
 println(oneDay.toMilliseconds()) // 86400000
+
+val sortedInstants = listOf(1694618242720, 1694618242723, 1694618242721, 1694618242722)
+    .map { KInstant(it) }
+    .sorted()
+println(sortedInstants) // [KInstant(2023-09-13T15:17:22.720Z), KInstant(2023-09-13T15:17:22.721Z), KInstant(2023-09-13T15:17:22.722Z), KInstant(2023-09-13T15:17:22.723Z)]
 ```
 
 ## Serialization, Deserialization
@@ -107,7 +112,7 @@ val date: NSDate = instant.toNSDate()
 ### From native side
 iOS
 ```swift
-let instant: KInstant = KInstant.Companion.shared.now() as KInstant
+let instant: KInstant = KInstant.companion.now() as KInstant
 let iosDate: Date = instant.toNSDate()
 let instant2: KInstant = KDateTimeKt.KInstantFrom(date: iosDate)
 ```
