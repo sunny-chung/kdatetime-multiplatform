@@ -275,13 +275,14 @@ class KDateTimeFormat(val pattern: String) {
 
         // order of the list matters
         val ISO8601_FORMATS = listOf(FULL, ISO8601_DATETIME)
+        val IOS_DATE_FORMATS = listOf(FULL, ISO8601_DATETIME, KDateTimeFormat("yyyy-MM-dd'T'HH:mmZ"))
 
         internal val PARSER_COMPULSORY_INPUT_TYPES = setOf(
             FormatTokenType.Year,
             FormatTokenType.Month,
             FormatTokenType.DayOfMonth,
             FormatTokenType.Minute,
-            FormatTokenType.Second,
+//            FormatTokenType.Second,
             FormatTokenType.TimeZone
         )
 

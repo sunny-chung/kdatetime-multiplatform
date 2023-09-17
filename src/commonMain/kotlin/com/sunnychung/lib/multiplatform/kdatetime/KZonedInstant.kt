@@ -102,7 +102,7 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
                     return format.parseToKZonedInstant(input = input)
                 } catch (e: ParseDateTimeException) { /* ignore */ }
             }
-            throw ParseDateTimeException()
+            throw ParseDateTimeException("$input cannot be parsed")
         }
 
         fun parseFromIso8601String(input: String): KZonedInstant {

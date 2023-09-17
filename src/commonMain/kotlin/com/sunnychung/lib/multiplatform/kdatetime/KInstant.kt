@@ -46,7 +46,7 @@ open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPoin
                     return format.parseToKInstant(input = input)
                 } catch (e: ParseDateTimeException) { /* ignore */ }
             }
-            throw ParseDateTimeException()
+            throw ParseDateTimeException("$input cannot be parsed")
         }
     }
 }
