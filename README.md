@@ -1,10 +1,19 @@
 # KDateTime Multiplatform
 
-A Kotlin Multiplatform library to provide *regular date-time functionality needed with very minimal platform dependencies*. It means upgrading OS / platform SDK target versions would not break your application. Same core API set is provided to all JVM, iOS, JS targets.
+A Kotlin Multiplatform library to provide **regular date-time functionality needed with very minimal platform dependencies**. It means upgrading OS / platform SDK target versions or moving to another platform would not break your application. Same and consistent core API set is provided to all JVM, Apple, JS targets.
 
 Before using this library, please read the relevant unit tests for well tested use cases. This library may not be stable to use out of these tested use cases.
 
 This library is currently under active development. Suggestions and contributions are welcomed!
+
+# Supported Platforms
+- Android (Tested against compileSdk = 33, 34)
+- Non-Android JVM (macOS tested against 14.0 beta, Java 17; Windows and Linux untested)
+- JS (Legacy compiler + IR compiler)
+- iOS (Tested against 16.4)
+- macOS Native (Tested against 14.0 beta)
+- watchOS (Tested against 10.0 beta)
+- tvOS (Tested against 17.0 beta)
 
 # APIs
 
@@ -19,9 +28,9 @@ Public classes / objects:
 
 Unlike Java, there is no local date or local datetime class here. That creates lots of usage issues. `KZonedInstant` can be used instead.
 
-There is also no time zone but time zone offset at this moment.
+There is also no time zone but time zone offset at this moment. (Help needed to tell me how these time zone ID, rule changes, DST work)
 
-All of these classes are *thread-safe*.
+All of these classes are **thread-safe**, **serializable** and **parcelable**.
 
 Supported custom format pattern symbols can be checked [here](src/commonMain/kotlin/com/sunnychung/lib/multiplatform/kdatetime/KDateTimeFormat.kt). It has some difference with Java APIs.
 
@@ -96,6 +105,24 @@ println(sortedInstants) // [KInstant(2023-09-13T15:17:22.720Z), KInstant(2023-09
 This library supports `kotlinx.serialization` out of the box (except `KDuration`), to allow conversion between KDateTime classes and string from/to JSON, protobuf, etc.. Read [examples here](src/commonTest/kotlin/com/sunnychung/lib/multiplatform/kdatetime/SerializerTest.kt).
 
 Besides, an additional type `KInstantAsLong` is provided for converting between timestamp in milliseconds (`Long`) and `KInstant`.
+
+```kotlin
+@Serializable
+@AndroidParcelize
+class TransitConnect : AndroidParcelable {
+    lateinit var summary: Summary
+
+    @Serializable
+    @AndroidParcelize
+    class Summary : WithDuration, AndroidParcelable {
+        override lateinit var startAt: KZonedInstant
+        override lateinit var endAt: KZonedInstant
+        var walkingSeconds: Long = -1
+        var waitingSeconds: Long = -1
+        var numOfTrips: Int = -1
+    }
+}
+```
 
 ## Compatibility with platform-specific datetime APIs
 ### From Kotlin side
