@@ -1,10 +1,29 @@
 # KDateTime Multiplatform
 
+![GitHub](https://img.shields.io/github/license/sunny-chung/kdatetime-multiplatform)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.sunny-chung/kdatetime-multiplatform)
+
+![Android](https://img.shields.io/badge/Android-blue)
+![JVM](https://img.shields.io/badge/JVM-blue)
+![js](https://img.shields.io/badge/js-blue)
+![iOS](https://img.shields.io/badge/iOS-blue)
+![macOS](https://img.shields.io/badge/macOS-blue)
+![watchOS](https://img.shields.io/badge/watchOS-blue)
+![tvOS](https://img.shields.io/badge/tvOS-blue)
+
 A Kotlin Multiplatform library to provide **regular date-time functionality needed with very minimal platform dependencies**. It means upgrading OS / platform SDK target versions or moving to another platform would not break your application. Same and consistent core API set is provided to all JVM, Apple, JS targets.
 
-Before using this library, please read the relevant unit tests for well tested use cases. This library may not be stable to use out of these tested use cases.
+Before using this library, please read the limitations, known issues and relevant unit tests for well tested use cases. This library may not be stable to use out of these tested use cases.
 
 This library is currently under active development. Suggestions and contributions are welcomed!
+
+## TL;DR
+* [APIs](#apis)
+* [Examples](#examples)
+* [Getting Started](#getting-started)
+* [Limitations](#limitations)
+* [Known Issues](#known-issues)
+* [For Developers](#for-developers)
 
 # Supported Platforms
 - Android (Tested against compileSdk = 33, 34)
@@ -151,12 +170,19 @@ The classes `KInstant`, `KZonedInstant`, `KZoneOffset`, `KDuration` implement `P
 
 ## First Step
 
+Add the repository.
+```kotlin
+    repositories {
+        mavenCentral()
+    }
+```
+
 In the KMM / KMP application build.gradle.kts, include the dependency in the `commonMain` source set.
 ```kotlin
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("com.github.sunny-chung:kdatetime-multiplatform:<version>")
+                api("io.github.sunny-chung:kdatetime-multiplatform:<version>")
                 // ...
             }
         }
@@ -171,7 +197,7 @@ Add a transitive export to the `framework` DSL:
         framework {
             baseName = "shared"
             transitiveExport = true
-            export("com.github.sunny-chung:kdatetime-multiplatform:<version>")
+            export("io.github.sunny-chung:kdatetime-multiplatform:<version>")
         }
 ```
 

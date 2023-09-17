@@ -9,9 +9,10 @@ plugins {
     kotlin("plugin.serialization") version "1.8.21"
     kotlin("plugin.parcelize") version "1.8.21"
     id("maven-publish")
+    id("sunnychung.publication")
 }
 
-group = "com.github.sunny-chung"
+group = "io.github.sunny-chung"
 version = "0.3.0"
 
 repositories {
@@ -33,7 +34,8 @@ kotlin {
                 jvmTarget = "1.8"
             }
         }
-        publishAllLibraryVariants()
+//        publishAllLibraryVariants()
+        publishLibraryVariants = listOf("release")
     }
     val darwinTargets = listOf(
         iosArm64(),
@@ -91,10 +93,6 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-parcelize-runtime:1.8.21")
             }
-        }
-        val androidTest by creating {
-            dependsOn(commonJvmTest)
-            dependsOn(androidMain)
         }
         val nonAndroidJvmMain by creating {
             dependsOn(commonJvmMain)
