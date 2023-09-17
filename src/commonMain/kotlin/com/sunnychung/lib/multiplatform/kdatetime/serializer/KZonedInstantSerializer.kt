@@ -12,12 +12,9 @@ import kotlinx.serialization.encoding.Encoder
 class KZonedInstantSerializer : KSerializer<KZonedInstant> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("KZonedInstant", PrimitiveKind.STRING)
 
-    // order of the list matters
-    val FORMATS = listOf(KDateTimeFormat.FULL, KDateTimeFormat.ISO8601_DATETIME)
-
     override fun deserialize(decoder: Decoder): KZonedInstant {
         val input = decoder.decodeString()
-        return KZonedInstant.parseFrom(input = input, formats = FORMATS)
+        return KZonedInstant.parseFromIso8601String(input = input)
     }
 
     override fun serialize(encoder: Encoder, value: KZonedInstant) {

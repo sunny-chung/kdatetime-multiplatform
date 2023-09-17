@@ -273,6 +273,9 @@ class KDateTimeFormat(val pattern: String) {
         val ISO8601_DATETIME = KDateTimeFormat("yyyy-MM-dd'T'HH:mm:ssZ")
         val FULL = KDateTimeFormat("yyyy-MM-dd'T'HH:mm:ss.lllZ")
 
+        // order of the list matters
+        val ISO8601_FORMATS = listOf(FULL, ISO8601_DATETIME)
+
         internal val PARSER_COMPULSORY_INPUT_TYPES = setOf(
             FormatTokenType.Year,
             FormatTokenType.Month,
