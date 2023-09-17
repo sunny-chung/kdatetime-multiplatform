@@ -7,4 +7,4 @@ pluginManagement {
 }
 
 rootProject.name = "kdatetime-multiplatform"
-
+includeBuild("convention-plugins")
