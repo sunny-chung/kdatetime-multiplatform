@@ -35,6 +35,8 @@ class KZoneOffset(val hours: Int, val minutes: Int) : AndroidParcelable {
     }
 
     companion object {
+        val UTC = KZoneOffset(0, 0)
+
         /**
          * @param string format: "+08:00" or "-07:00" or "Z"
          */

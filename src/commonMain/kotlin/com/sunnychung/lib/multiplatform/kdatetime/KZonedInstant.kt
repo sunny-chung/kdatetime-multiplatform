@@ -38,6 +38,14 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
 
     fun datePart(): KDate = KGregorianCalendar.utcDateFromTimestamp(offsetedInstant().toMilliseconds())
 
+    override fun hourPart(): Int {
+        return offsetedInstant().hourPart()
+    }
+
+    override fun minutePart(): Int {
+        return offsetedInstant().minutePart()
+    }
+
     fun copy(
         year: Int? = null,
         month: Int? = null,
