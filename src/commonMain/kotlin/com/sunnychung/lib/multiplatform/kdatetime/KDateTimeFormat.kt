@@ -110,13 +110,13 @@ class KDateTimeFormat(val pattern: String) {
     }
 
     fun format(datetime: KDateTimeFormattable): String {
-        val localDateTime = if (datetime is KZonedInstant) {
-            datetime + KDuration.of(datetime.zoneOffset.toMilliseconds(), KFixedTimeUnit.MilliSecond)
-        } else {
-            datetime
-        }
+        val localDateTime = datetime
         val localDate by lazy {
-            KGregorianCalendar.utcDateFromTimestamp(localDateTime.toMilliseconds())
+            if (datetime is KZonedInstant) {
+                datetime.datePart()
+            } else {
+                KGregorianCalendar.utcDateFromTimestamp(localDateTime.toMilliseconds())
+            }
         }
 
         val s = StringBuilder()
