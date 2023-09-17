@@ -27,5 +27,5 @@ fun NSTimeZone.toKZoneOffset(): KZoneOffset {
 fun KZoneOffsetFrom(timeZone: NSTimeZone): KZoneOffset = timeZone.toKZoneOffset()
 
 fun KZoneOffset.toNSTimeZone(): NSTimeZone {
-    return NSTimeZone.timeZoneForSecondsFromGMT(KDuration.of(toMilliseconds(), KFixedTimeUnit.MilliSecond).toTimeUnitValue(KFixedTimeUnit.Second))
+    return NSTimeZone.timeZoneForSecondsFromGMT(KDuration.of(toMilliseconds(), KFixedTimeUnit.MilliSecond).toTimeUnitValue(KFixedTimeUnit.Second).toNSInteger())
 }

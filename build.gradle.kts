@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+
 plugins {
     kotlin("multiplatform") version "1.8.21"
 
@@ -113,14 +115,33 @@ kotlin {
         val darwinTest by creating {
             dependsOn(commonTest)
         }
+        val iosMain by creating {
+            dependsOn(darwinMain)
+        }
+        val watchosMain by creating {
+            dependsOn(darwinMain)
+        }
+        val tvosMain by creating {
+            dependsOn(darwinMain)
+        }
+        val macosMain by creating {
+            dependsOn(darwinMain)
+        }
         val jsMain by getting
         val jsTest by getting
 //        val nativeMain by getting
 //        val nativeTest by getting
 
         configure(darwinTargets) {
-            compilations["main"].defaultSourceSet.dependsOn(darwinMain)
-            compilations["test"].defaultSourceSet.dependsOn(darwinTest)
+            val (mainSourceSet, testSourceSet) = when {
+                name.startsWith("ios") -> Pair(iosMain, darwinTest)
+                name.startsWith("watchos") -> Pair(watchosMain, darwinTest)
+                name.startsWith("tvos") -> Pair(tvosMain, darwinTest)
+                name.startsWith("macos") -> Pair(macosMain, darwinTest)
+                else -> throw UnsupportedOperationException("Target $name is not supported")
+            }
+            compilations["main"].defaultSourceSet.dependsOn(mainSourceSet)
+            compilations["test"].defaultSourceSet.dependsOn(testSourceSet)
         }
     }
 }
