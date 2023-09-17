@@ -156,7 +156,7 @@ In the KMM / KMP application build.gradle.kts, include the dependency in the `co
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("com.sunnychung.multiplatform:kdatetime-multiplatform:0.1.0-SNAPSHOT")
+                api("com.github.sunny-chung:kdatetime-multiplatform:<version>")
                 // ...
             }
         }
@@ -171,7 +171,7 @@ Add a transitive export to the `framework` DSL:
         framework {
             baseName = "shared"
             transitiveExport = true
-            export("com.sunnychung.multiplatform:kdatetime-multiplatform:0.1.0-SNAPSHOT")
+            export("com.github.sunny-chung:kdatetime-multiplatform:<version>")
         }
 ```
 

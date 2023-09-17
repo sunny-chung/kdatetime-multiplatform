@@ -11,8 +11,8 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.sunnychung.multiplatform"
-version = "0.1.0-SNAPSHOT"
+group = "com.github.sunny-chung"
+version = "0.3.0"
 
 repositories {
     mavenCentral()
@@ -22,7 +22,7 @@ repositories {
 kotlin {
     jvm {
         jvmToolchain(8)
-//        withJava() // not compatiable with Android Gradle plugin
+//        withJava() // not compatible with Android Gradle plugin
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
         }
@@ -153,3 +153,17 @@ android {
         minSdk = 24
     }
 }
+
+//publishing {
+//    publications {
+//        create<MavenPublication>("maven") {
+//            groupId = artifactGroup
+//            artifactId = "kdatetime-multiplatform"
+//            version = artifactVersion
+//
+////            afterEvaluate {
+////                from(components["release"])
+////            }
+//        }
+//    }
+//}
