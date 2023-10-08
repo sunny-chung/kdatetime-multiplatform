@@ -67,5 +67,7 @@ class Demo {
         )
         val zonedDateTime2 = zonedDateTime + duration2
         println(zonedDateTime2) // KZonedDateTime(2023-10-04T13:10:15.000+08:00)
+
+        println(KDuration.of(10, KFixedTimeUnit.Second) > KDuration.of(9, KFixedTimeUnit.Second)) // true
     }
 }

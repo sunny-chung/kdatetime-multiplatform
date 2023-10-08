@@ -3,7 +3,8 @@ package com.sunnychung.lib.multiplatform.kdatetime
 import com.sunnychung.lib.multiplatform.kdatetime.annotation.AndroidParcelize
 
 @AndroidParcelize
-open class KDuration internal constructor(val millis: Long) : KDateTimeFormattable, AndroidParcelable {
+open class KDuration internal constructor(val millis: Long) : KDateTimeFormattable,
+    Comparable<KDuration>, AndroidParcelable {
 
     override fun toMilliseconds(): Long = millis
 
@@ -13,6 +14,17 @@ open class KDuration internal constructor(val millis: Long) : KDateTimeFormattab
 
     operator fun plus(other: KDuration): KDuration {
         return KDuration(millis + other.millis)
+    }
+
+    override fun compareTo(other: KDuration): Int {
+        return toMilliseconds().compareTo(other.toMilliseconds())
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is KDuration) {
+            return toMilliseconds() == other.toMilliseconds()
+        }
+        return false
     }
 
     companion object {
