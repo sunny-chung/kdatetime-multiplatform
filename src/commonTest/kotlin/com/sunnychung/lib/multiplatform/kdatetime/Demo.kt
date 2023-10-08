@@ -23,8 +23,8 @@ class Demo {
         val japanDateTime = now.atZoneOffset(KZoneOffset(9, 0))
         println(japanDateTime) // KZonedInstant(2023-09-14T00:17:22.720+09:00)
 
-        val lastTrainTime = localDateTime.copy(hour = 23, minute = 10, second = 0, millisecond = 0)
-        println(KDateTimeFormat.ISO8601_DATETIME.format(lastTrainTime)) // 2023-09-13T23:10:00+08:00
+        val lastTrainTime = localDateTime.toKZonedDateTime().copy(hour = 23, minute = 10, second = 0, millisecond = 0)
+        println(KDateTimeFormat.ISO8601_DATETIME.format(lastTrainTime.toKZonedInstant())) // 2023-09-13T23:10:00+08:00
 
         val parsedDateTime = KDateTimeFormat.ISO8601_DATETIME.parseToKZonedInstant("2023-09-10T17:18:53-07:00")
         println(parsedDateTime.toMilliseconds()) // 1694391533000
@@ -55,5 +55,17 @@ class Demo {
             .map { KInstant(it) }
             .sorted()
         println(sortedInstants) // [KInstant(2023-09-13T15:17:22.720Z), KInstant(2023-09-13T15:17:22.721Z), KInstant(2023-09-13T15:17:22.722Z), KInstant(2023-09-13T15:17:22.723Z)]
+
+        val zonedDateTime = KZonedDateTime(
+            year = 2023,
+            month = 10,
+            day = 4,
+            hour = 13,
+            minute = 8,
+            second = 40,
+            zoneOffset = KZoneOffset.parseFrom("+08:00")
+        )
+        val zonedDateTime2 = zonedDateTime + duration2
+        println(zonedDateTime2) // KZonedDateTime(2023-10-04T13:10:15.000+08:00)
     }
 }

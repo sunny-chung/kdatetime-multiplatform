@@ -180,7 +180,7 @@ class KDateTimeFormat(val pattern: String) {
         }
     }
 
-    fun parseToKZonedInstant(input: String): KZonedInstant {
+    fun parseToKZonedDateTime(input: String): KZonedDateTime {
         validateForFullValidParser()
 
         var year: Int? = null
@@ -252,7 +252,7 @@ class KDateTimeFormat(val pattern: String) {
             }
         }
 
-        return KGregorianCalendar.kZonedInstantFromLocalDate(
+        return KZonedDateTime(
             year = year!!,
             month = month!!,
             day = dayOfMonth!!,
@@ -264,6 +264,12 @@ class KDateTimeFormat(val pattern: String) {
         )
     }
 
+    @Deprecated("Use parseToKZonedDateTime(String).toKZonedInstant() instead")
+    fun parseToKZonedInstant(input: String): KZonedInstant {
+        return parseToKZonedDateTime(input).toKZonedInstant()
+    }
+
+    @Deprecated("Use parseToKZonedDateTime(String).toKZonedInstant().dropZoneOffset() instead")
     fun parseToKInstant(input: String): KInstant {
         val instantWithZone = parseToKZonedInstant(input = input)
         return instantWithZone.dropZoneOffset()

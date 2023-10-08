@@ -31,11 +31,12 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
     }
 
     fun startOfDay(): KZonedInstant {
-        return copy(hour = 0, minute = 0, second = 0, millisecond = 0)
+        return toKZonedDateTime().startOfDay().toKZonedInstant()
     }
 
     internal fun offsetedInstant(): KInstant = KInstant(timestampMs + zoneOffset.toMilliseconds())
 
+    @Deprecated("Use `toKZonedDateTime().datePart()` instead")
     fun datePart(): KDate = KGregorianCalendar.utcDateFromTimestamp(offsetedInstant().toMilliseconds())
 
     override fun hourPart(): Int {
@@ -44,34 +45,6 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
 
     override fun minutePart(): Int {
         return offsetedInstant().minutePart()
-    }
-
-    fun copy(
-        year: Int? = null,
-        month: Int? = null,
-        day: Int? = null,
-        hour: Int? = null,
-        minute: Int? = null,
-        second: Int? = null,
-        millisecond: Int? = null,
-        zoneOffset: KZoneOffset? = null
-   ): KZonedInstant {
-        val localDateTime by lazy {
-            offsetedInstant()
-        }
-        val localDate by lazy {
-            KGregorianCalendar.utcDateFromTimestamp(localDateTime.toMilliseconds())
-        }
-        return KGregorianCalendar.kZonedInstantFromLocalDate(
-            year = year ?: localDate.year,
-            month = month ?: localDate.month,
-            day = day ?: localDate.day,
-            hour = hour ?: localDateTime.hourPart(),
-            minute = minute ?: localDateTime.minutePart(),
-            second = second ?: localDateTime.secondPart(),
-            millisecond = millisecond ?: localDateTime.millisecondPart(),
-            zoneOffset = zoneOffset ?: this.zoneOffset
-        )
     }
 
     fun dropZoneOffset(): KInstant {

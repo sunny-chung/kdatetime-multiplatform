@@ -40,12 +40,13 @@ Public classes / objects:
 - `KInstant` (single point of time)
 - `KZonedInstant` (single point of time + time zone offset)
 - `KZoneOffset` (time zone offset)
+- `KZonedDateTime` (date time + time zone offset)
 - `KDuration` (a date-time length)
 - `KFixedTimeUnit` (time unit)
 - `KDateTimeFormat` (format and parse dates and times)
 - `KGregorianCalendar` (conversion between timestamps and calendar dates)
 
-Unlike Java, there is no local date or local datetime class here. That creates lots of usage issues. `KZonedInstant` can be used instead.
+Unlike Java, there is no local date or local datetime class here. That creates lots of usage issues. `KZonedInstant` or `KZonedDateTime` can be used instead.
 
 There is also no time zone but time zone offset at this moment. (Help needed to tell me how these time zone ID, rule changes, DST work)
 
@@ -72,8 +73,8 @@ println(KZonedInstant.nowAtLocalZoneOffset()) // KZonedInstant(2023-09-13T23:17:
 val japanDateTime = now.atZoneOffset(KZoneOffset(9, 0))
 println(japanDateTime) // KZonedInstant(2023-09-14T00:17:22.720+09:00)
 
-val lastTrainTime = localDateTime.copy(hour = 23, minute = 10, second = 0, millisecond = 0)
-println(KDateTimeFormat.ISO8601_DATETIME.format(lastTrainTime)) // 2023-09-13T23:10:00+08:00
+val lastTrainTime = localDateTime.toKZonedDateTime().copy(hour = 23, minute = 10, second = 0, millisecond = 0)
+println(KDateTimeFormat.ISO8601_DATETIME.format(lastTrainTime.toKZonedInstant())) // 2023-09-13T23:10:00+08:00
 
 val parsedDateTime = KDateTimeFormat.ISO8601_DATETIME.parseToKZonedInstant("2023-09-10T17:18:53-07:00")
 println(parsedDateTime.toMilliseconds()) // 1694391533000
@@ -88,17 +89,6 @@ Time unit conversions.
 ```kotlin
 val twoMinutes = KDuration.of(2, KFixedTimeUnit.Minute)
 println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
-```
-
-For platforms that do not have a single type storing timestamp + time zone offset, and you must use
-their native type for whatever reason (perhaps to use a UI library),
-below tedious conversion may meet your need:
-```swift
-var departureLocalDate: Date // from user input, displayed in +09:00 time zone, but storing timestamp in device time zone
-
-// convert that suspicious date-time object back to the correct timestamp
-let startAfter = KDateTimeKt.toKZonedInstant(departureLocalDate, zoneOffset: KZoneOffset.companion.local())
-    .doCopy(year: nil, month: nil, day: nil, hour: nil, minute: nil, second: nil, millisecond: nil, zoneOffset: KZoneOffset(hours: 9, minutes: 0))
 ```
 
 ## Arithmetic, Comparison
@@ -118,6 +108,18 @@ val sortedInstants = listOf(1694618242720, 1694618242723, 1694618242721, 1694618
     .map { KInstant(it) }
     .sorted()
 println(sortedInstants) // [KInstant(2023-09-13T15:17:22.720Z), KInstant(2023-09-13T15:17:22.721Z), KInstant(2023-09-13T15:17:22.722Z), KInstant(2023-09-13T15:17:22.723Z)]
+
+val zonedDateTime = KZonedDateTime(
+    year = 2023,
+    month = 10,
+    day = 4,
+    hour = 13,
+    minute = 8,
+    second = 40,
+    zoneOffset = KZoneOffset.parseFrom("+08:00")
+)
+val zonedDateTime2 = zonedDateTime + duration2
+println(zonedDateTime2) // KZonedDateTime(2023-10-04T13:10:15.000+08:00)
 ```
 
 ## Serialization, Deserialization
@@ -164,7 +166,7 @@ let instant2: KInstant = KDateTimeKt.KInstantFrom(date: iosDate)
 ```
 
 ### For Android
-The classes `KInstant`, `KZonedInstant`, `KZoneOffset`, `KDuration` implement `Parcelable`.
+The classes `KInstant`, `KZonedInstant`, `KZonedDateTime`, `KZoneOffset`, `KDuration` implement `Parcelable`.
 
 # Getting Started
 

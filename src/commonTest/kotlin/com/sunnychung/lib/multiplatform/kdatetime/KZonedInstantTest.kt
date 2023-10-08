@@ -64,36 +64,4 @@ class KZonedInstantTest {
             assertEquals(1694304000_000, toMilliseconds())
         }
     }
-
-    @Test
-    fun copy() {
-        KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0)).run {
-            assertEquals(toMilliseconds(), copy().toMilliseconds())
-        }
-        KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = -7, minutes = 0)).run {
-            assertEquals(toMilliseconds(), copy().toMilliseconds())
-        }
-
-        // Monday, September 11, 2023 2:31:39 PM GMT+08:00
-        KZonedInstant(timestampMs = 1694413899_001, zoneOffset = KZoneOffset(hours = 8, minutes = 0)).run {
-            assertEquals(1694529067_666, copy(
-                day = 12,
-                hour = 22,
-                second = 7,
-                millisecond = 666
-            ).toMilliseconds())
-            assertEquals(1694413899_001, toMilliseconds()) // assert original instance is not modified
-        }
-
-        // Monday, September 11, 2023 2:31:39 PM GMT+08:00
-        KZonedInstant(timestampMs = 1694413899_001, zoneOffset = KZoneOffset(hours = 8, minutes = 0)).run {
-            // Monday, September 11, 2023 2:31:39 PM GMT-07:00
-            val newZonedInstant = copy(zoneOffset = KZoneOffset(hours = -7, minutes = 0))
-            assertEquals(datePart(), newZonedInstant.datePart())
-            assertEquals(hourPart(), newZonedInstant.hourPart())
-            assertEquals(minutePart(), newZonedInstant.minutePart())
-            assertEquals(secondPart(), newZonedInstant.secondPart())
-            assertEquals(millisecondPart(), newZonedInstant.millisecondPart())
-        }
-    }
 }

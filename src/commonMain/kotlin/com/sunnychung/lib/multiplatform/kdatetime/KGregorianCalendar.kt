@@ -77,7 +77,7 @@ object KGregorianCalendar {
         return KDate(year = year, month = month, day = dayInMonth)
     }
 
-    fun kZonedInstantFromLocalDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, millisecond: Int = 0, zoneOffset: KZoneOffset): KZonedInstant {
+    internal fun kZonedInstantFromLocalDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, millisecond: Int = 0, zoneOffset: KZoneOffset): KZonedInstant {
         if (!(1..12).contains(month)) {
             throw IllegalArgumentException("`month` must be 1 ~ 12.")
         }
