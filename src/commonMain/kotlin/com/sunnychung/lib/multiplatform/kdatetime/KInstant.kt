@@ -12,6 +12,10 @@ open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPoin
         return KInstant(timestampMs + duration.millis)
     }
 
+    operator fun minus(duration: KDuration): KInstant {
+        return KInstant(timestampMs - duration.millis)
+    }
+
     override fun toMilliseconds(): Long {
         return timestampMs
     }

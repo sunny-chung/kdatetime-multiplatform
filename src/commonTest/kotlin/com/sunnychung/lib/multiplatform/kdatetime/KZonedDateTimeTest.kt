@@ -36,4 +36,18 @@ class KZonedDateTimeTest {
             assertEquals(millisecond, newZonedDateTime.millisecond)
         }
     }
+
+    @Test
+    fun plus() {
+        val dateTime1 = KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0)).toKZonedDateTime()
+        val dateTime2 = dateTime1 + KDuration.of(2, KFixedTimeUnit.Hour)
+        assertEquals(1694409632_999 + 2 * 60 * 60 * 1000, dateTime2.toKZonedInstant().toEpochMilliseconds())
+    }
+
+    @Test
+    fun minus() {
+        val dateTime1 = KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0)).toKZonedDateTime()
+        val dateTime2 = dateTime1 - KDuration.of(3, KFixedTimeUnit.Hour)
+        assertEquals(1694409632_999 - 3 * 60 * 60 * 1000, dateTime2.toKZonedInstant().toEpochMilliseconds())
+    }
 }

@@ -64,4 +64,20 @@ class KZonedInstantTest {
             assertEquals(1694304000_000, toMilliseconds())
         }
     }
+
+    @Test
+    fun plus() {
+        val instant1 = KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0))
+        (instant1 + KDuration.of(7, KFixedTimeUnit.Second)).run {
+            assertEquals(1694409632_999 + 7 * 1000, toMilliseconds())
+        }
+    }
+
+    @Test
+    fun minus() {
+        val instant1 = KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0))
+        (instant1 - KDuration.of(7, KFixedTimeUnit.Second)).run {
+            assertEquals(1694409632_999 - 7 * 1000, toMilliseconds())
+        }
+    }
 }

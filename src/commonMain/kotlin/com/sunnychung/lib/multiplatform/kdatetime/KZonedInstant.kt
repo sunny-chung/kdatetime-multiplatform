@@ -30,6 +30,10 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
         return KZonedInstant(timestampMs + duration.millis, zoneOffset)
     }
 
+    operator fun minus(duration: KDuration): KZonedInstant {
+        return KZonedInstant(timestampMs - duration.millis, zoneOffset)
+    }
+
     fun startOfDay(): KZonedInstant {
         return toKZonedDateTime().startOfDay().toKZonedInstant()
     }

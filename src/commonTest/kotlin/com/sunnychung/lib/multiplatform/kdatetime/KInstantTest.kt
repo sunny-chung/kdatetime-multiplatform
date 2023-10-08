@@ -26,4 +26,18 @@ class KInstantTest {
         val difference2 = t2 - t1
         assertEquals(-1 * offset, difference2.toMilliseconds())
     }
+
+    @Test
+    fun plus() {
+        val t1 = KInstant(1694404171789)
+        val t2 = t1 + KDuration.of(12, KFixedTimeUnit.Second)
+        assertEquals(1694404171789 + 12 * 1000, t2.toEpochMilliseconds())
+    }
+
+    @Test
+    fun minus() {
+        val t1 = KInstant(1694404171789)
+        val t2 = t1 - KDuration.of(12, KFixedTimeUnit.Second)
+        assertEquals(1694404171789 - 12 * 1000, t2.toEpochMilliseconds())
+    }
 }
