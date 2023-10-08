@@ -15,7 +15,7 @@ class KZonedDateTime(
     val second: Int,
     val millisecond: Int = 0,
     val zoneOffset: KZoneOffset
-) {
+) : AndroidParcelable {
     init {
         if (!(1..12).contains(month)) {
             throw IllegalArgumentException("`month` must be 1 ~ 12.")
@@ -72,6 +72,10 @@ class KZonedDateTime(
 
     operator fun plus(duration: KDuration): KZonedDateTime {
         return (toKZonedInstant() + duration).toKZonedDateTime()
+    }
+
+    operator fun minus(duration: KDuration): KZonedDateTime {
+        return (toKZonedInstant() - duration).toKZonedDateTime()
     }
 }
 
