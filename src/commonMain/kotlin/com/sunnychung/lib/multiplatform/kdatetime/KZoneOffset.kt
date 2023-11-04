@@ -31,7 +31,7 @@ class KZoneOffset(val hours: Int, val minutes: Int) : AndroidParcelable {
     }
 
     override fun toString(): String {
-        return "${this::class.simpleName}(${toDisplayString()})"
+        return toDisplayString()
     }
 
     companion object {

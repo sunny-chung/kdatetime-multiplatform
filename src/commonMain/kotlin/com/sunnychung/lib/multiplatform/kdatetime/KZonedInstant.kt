@@ -23,7 +23,7 @@ open class KZonedInstant(private val timestampMs: Long, val zoneOffset: KZoneOff
     override fun toEpochMilliseconds(): Long = timestampMs
 
     override fun toString(): String {
-        return "${this::class.simpleName}(${KDateTimeFormat.FULL.format(this)})"
+        return KDateTimeFormat.FULL.format(this)
     }
 
     operator fun plus(duration: KDuration): KZonedInstant {

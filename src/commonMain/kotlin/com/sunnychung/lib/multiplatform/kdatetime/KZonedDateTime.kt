@@ -67,7 +67,7 @@ class KZonedDateTime(
     }
 
     override fun toString(): String {
-        return "${this::class.simpleName}(${KDateTimeFormat.FULL.format(toKZonedInstant())})"
+        return KDateTimeFormat.FULL.format(toKZonedInstant())
     }
 
     operator fun plus(duration: KDuration): KZonedDateTime {
