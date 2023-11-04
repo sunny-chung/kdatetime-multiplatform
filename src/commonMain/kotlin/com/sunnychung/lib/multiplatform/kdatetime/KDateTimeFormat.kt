@@ -205,38 +205,44 @@ class KDateTimeFormat(val pattern: String) {
                 return@forEach // skip because no field to input
             }
 
-            when (token.type) {
-                FormatTokenType.Year -> {
-                    year = inputSubstring.toInt()
-                    if (token.length == 2) {
-                        year = year!! + if (year!! >= 70) 1900 else 2000
+            try {
+                when (token.type) {
+                    FormatTokenType.Year -> {
+                        year = inputSubstring.toInt()
+                        if (token.length == 2) {
+                            year = year!! + if (year!! >= 70) 1900 else 2000
+                        }
                     }
+
+                    FormatTokenType.Month -> month = inputSubstring.toInt()
+                    FormatTokenType.DayOfMonth -> dayOfMonth = inputSubstring.toInt()
+                    FormatTokenType.Hour_0_23 -> hour = inputSubstring.toInt()
+                    FormatTokenType.Hour_1_12 -> hour = inputSubstring.toInt()
+                    FormatTokenType.Minute -> minute = inputSubstring.toInt()
+                    FormatTokenType.Second -> second = inputSubstring.toInt()
+                    FormatTokenType.Millisecond -> millisecond = inputSubstring.toInt()
+                    FormatTokenType.ampm -> amPm = parseAmPm(inputSubstring)
+                    FormatTokenType.AMPM -> amPm = parseAmPm(inputSubstring)
+                    FormatTokenType.TimeZone -> {
+                        val longerSubstring = input.substring(startIndex)
+                        length = if (longerSubstring.startsWith("Z")) {
+                            1
+                        } else if (longerSubstring.startsWith("UTC")) {
+                            3
+                        } else {
+                            "+00:00".length
+                        }
+                        zoneOffset = try {
+                            KZoneOffset.parseFrom(longerSubstring.substring(0, length))
+                        } catch (e: IllegalArgumentException) {
+                            throw ParseDateTimeException(e.message)
+                        }
+                    }
+
+                    else -> {}
                 }
-                FormatTokenType.Month -> month = inputSubstring.toInt()
-                FormatTokenType.DayOfMonth -> dayOfMonth = inputSubstring.toInt()
-                FormatTokenType.Hour_0_23 -> hour = inputSubstring.toInt()
-                FormatTokenType.Hour_1_12 -> hour = inputSubstring.toInt()
-                FormatTokenType.Minute -> minute = inputSubstring.toInt()
-                FormatTokenType.Second -> second = inputSubstring.toInt()
-                FormatTokenType.Millisecond -> millisecond = inputSubstring.toInt()
-                FormatTokenType.ampm -> amPm = parseAmPm(inputSubstring)
-                FormatTokenType.AMPM -> amPm = parseAmPm(inputSubstring)
-                FormatTokenType.TimeZone -> {
-                    val longerSubstring = input.substring(startIndex)
-                    length = if (longerSubstring.startsWith("Z")) {
-                        1
-                    } else if (longerSubstring.startsWith("UTC")) {
-                        3
-                    } else {
-                        "+00:00".length
-                    }
-                    zoneOffset = try {
-                        KZoneOffset.parseFrom(longerSubstring.substring(0, length))
-                    } catch (e: IllegalArgumentException) {
-                        throw ParseDateTimeException(e.message)
-                    }
-                }
-                else -> {}
+            } catch (e: NumberFormatException) {
+                throw ParseDateTimeException(e.message)
             }
             startIndex += length
         }

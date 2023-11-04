@@ -13,8 +13,6 @@
 
 A Kotlin Multiplatform library to provide **regular date-time functionality needed with very minimal platform dependencies**. It means upgrading OS / platform SDK target versions or moving to another platform would not break your application. Same and consistent core API set is provided to all JVM, Apple, JS targets.
 
-Before using this library, please read the limitations, known issues and relevant unit tests for well tested use cases. This library may not be stable to use out of these tested use cases.
-
 This library is currently under active development. Suggestions and contributions are welcomed!
 
 ## TL;DR
@@ -214,9 +212,7 @@ import shared
 - Only timestamps between year 0 to 2999 are supported
 - Minimum time unit is millisecond
 - Only English is supported for locale-specific inputs and outputs
-
-# Known Issues
-- Date-time parser can only parse integers with exact length specified in the pattern. If this condition does not meet, exceptions might not be thrown, instead wrong result might be returned.
+- Date-time parser can only parse integers with exact length specified in the pattern.
 
 # For Developers
 

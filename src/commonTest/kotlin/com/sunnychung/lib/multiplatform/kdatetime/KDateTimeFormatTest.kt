@@ -124,4 +124,22 @@ class KDateTimeFormatTest {
             KDateTimeFormat.FULL.parseToKZonedDateTime("2023-04-30T23:00:00.-12+08:00")
         }
     }
+
+    @Test
+    fun parseAmbiguousFormat() {
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedInstant("23-09--1 02:54:19.230amZ")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedInstant("23-09-01 2:54:19.230amZ")
+        }
+
+        KDateTimeFormat("yyMMddhhmmsslllaaZ").parseToKZonedInstant("230911025419230amZ").let { dateTime ->
+//            println(dateTime)
+            assertEquals(1694400859230, dateTime.toMilliseconds())
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat("yyMMddhhmmsslllaaZ").parseToKZonedInstant("23091102541923amZ")
+        }
+    }
 }
