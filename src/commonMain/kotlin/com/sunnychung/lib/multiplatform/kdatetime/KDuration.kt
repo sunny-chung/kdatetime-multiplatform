@@ -27,6 +27,10 @@ open class KDuration internal constructor(val millis: Long) : KDateTimeFormattab
         return false
     }
 
+    override fun toString(): String {
+        return "${millis}ms"
+    }
+
     companion object {
         fun of(value: Int, unit: KFixedTimeUnit) = KDuration(value * unit.ratioToMillis)
         fun of(value: Long, unit: KFixedTimeUnit) = KDuration(value * unit.ratioToMillis)
