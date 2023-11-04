@@ -1,5 +1,9 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import com.sunnychung.lib.multiplatform.kdatetime.extension.days
+import com.sunnychung.lib.multiplatform.kdatetime.extension.milliseconds
+import com.sunnychung.lib.multiplatform.kdatetime.extension.minutes
+import com.sunnychung.lib.multiplatform.kdatetime.extension.seconds
 import kotlin.test.Test
 
 class Demo {
@@ -29,21 +33,21 @@ class Demo {
         val parsedDateTime = KDateTimeFormat.ISO8601_DATETIME.parseToKZonedInstant("2023-09-10T17:18:53-07:00")
         println(parsedDateTime.toMilliseconds()) // 1694391533000
 
-        val duration1 = KDuration.of(95, KFixedTimeUnit.Second)
+        val duration1 = 95.seconds()
         println(duration1.format("m:ss")) // 1:35
         println(duration1.format("m'm' s's'")) // 1m 35s
 
         /* Conversions */
 
-        val twoMinutes = KDuration.of(2, KFixedTimeUnit.Minute)
+        val twoMinutes = 2.minutes()
         println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
 
         /* Arithmetic, Comparison */
 
-        val tomorrow = now + KDuration.of(1, KFixedTimeUnit.Day)
+        val tomorrow = now + 1.days()
         println(KDateTimeFormat.ISO8601_DATETIME.format(tomorrow)) // 2023-09-14T15:17:22Z
 
-        val duration2 = KDuration.of(1, KFixedTimeUnit.Minute) + KDuration.of(35, KFixedTimeUnit.Second)
+        val duration2 = 1.minutes() + 35.seconds()
         println(duration2.format("mm:ss")) // 01:35
 
         println(tomorrow.atZoneOffset(KZoneOffset(-7, 0)) > now.atZoneOffset(KZoneOffset(8, 0))) // true
@@ -68,6 +72,6 @@ class Demo {
         val zonedDateTime2 = zonedDateTime + duration2
         println(zonedDateTime2) // KZonedDateTime(2023-10-04T13:10:15.000+08:00)
 
-        println(KDuration.of(10, KFixedTimeUnit.Second) > KDuration.of(9, KFixedTimeUnit.Second)) // true
+        println(10_000.milliseconds() > 9.seconds()) // true
     }
 }
