@@ -66,6 +66,21 @@ class KGregorianCalendarTest {
             assertEquals(11, month)
             assertEquals(9, day)
         }
+        calendar.utcDateFromTimestamp(-31877452801_000).run {
+            assertEquals(959, year)
+            assertEquals(11, month)
+            assertEquals(4, day)
+        }
+        calendar.utcDateFromTimestamp(-31877452801_000 + 789).run {
+            assertEquals(959, year)
+            assertEquals(11, month)
+            assertEquals(4, day)
+        }
+        calendar.utcDateFromTimestamp(-31877452801_000 + 1000).run {
+            assertEquals(959, year)
+            assertEquals(11, month)
+            assertEquals(5, day)
+        }
     }
 
     @Test
@@ -150,6 +165,19 @@ class KGregorianCalendarTest {
             zoneOffset = KZoneOffset(0, 0)
         ).run {
             assertEquals(4129409933_600, toMilliseconds())
+        }
+
+        calendar.kZonedInstantFromLocalDate(
+            year = 959,
+            month = 11,
+            day = 4,
+            hour = 7,
+            minute = 33,
+            second = 21,
+            millisecond = 456,
+            zoneOffset = KZoneOffset(0, 0)
+        ).run {
+            assertEquals(-31877511999_000 + 456, toMilliseconds())
         }
     }
 }

@@ -15,15 +15,24 @@ object KGregorianCalendar {
 
     init {
 
-        val yearTimestampPairs = mutableListOf<YearTimestampPair>()
-        // TODO: support year < 1970 and >= 3000
+        val yearTimestampPairsOnOrAfter1970 = mutableListOf<YearTimestampPair>()
+        val yearTimestampPairsBefore1970 = mutableListOf<YearTimestampPair>()
+        // TODO: year range can be extended manually
         (1970..3000).forEachIndexed { index, it ->
-            yearTimestampPairs += YearTimestampPair(
+            yearTimestampPairsOnOrAfter1970 += YearTimestampPair(
                 year = it,
-                timestampMs = if (index == 0) 0 else yearTimestampPairs.last().timestampMs +
-                        numOfDaysInYear(it - 1) * KFixedTimeUnit.Day.ratioToMillis
+                timestampMs = if (index == 0) 0 else (yearTimestampPairsOnOrAfter1970.last().timestampMs +
+                        numOfDaysInYear(it - 1) * KFixedTimeUnit.Day.ratioToMillis)
             )
         }
+        (1969 downTo 0).forEachIndexed { index, it ->
+            yearTimestampPairsBefore1970 += YearTimestampPair(
+                year = it,
+                timestampMs = (if (index == 0) 0 else yearTimestampPairsBefore1970.last().timestampMs) -
+                        numOfDaysInYear(it) * KFixedTimeUnit.Day.ratioToMillis
+            )
+        }
+        val yearTimestampPairs = yearTimestampPairsBefore1970.reversed() + yearTimestampPairsOnOrAfter1970
         YEAR_TO_TIMESTAMP_MS_LIST = yearTimestampPairs
         YEAR_TO_TIMESTAMP_MS_MAP = yearTimestampPairs.associate { it.year to it.timestampMs }
     }

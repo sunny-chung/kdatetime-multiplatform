@@ -211,7 +211,7 @@ import shared
 ```
 
 # Limitations
-- Only timestamps between year 1970 to 2999 are supported
+- Only timestamps between year 0 to 2999 are supported
 - Minimum time unit is millisecond
 - Only English is supported for locale-specific inputs and outputs
 
