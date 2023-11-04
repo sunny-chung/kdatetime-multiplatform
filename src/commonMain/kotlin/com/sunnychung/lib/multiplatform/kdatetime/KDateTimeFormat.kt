@@ -230,7 +230,11 @@ class KDateTimeFormat(val pattern: String) {
                     } else {
                         "+00:00".length
                     }
-                    zoneOffset = KZoneOffset.parseFrom(longerSubstring.substring(0, length))
+                    zoneOffset = try {
+                        KZoneOffset.parseFrom(longerSubstring.substring(0, length))
+                    } catch (e: IllegalArgumentException) {
+                        throw ParseDateTimeException(e.message)
+                    }
                 }
                 else -> {}
             }
@@ -252,16 +256,20 @@ class KDateTimeFormat(val pattern: String) {
             }
         }
 
-        return KZonedDateTime(
-            year = year!!,
-            month = month!!,
-            day = dayOfMonth!!,
-            hour = hour ?: 0,
-            minute = minute ?: 0,
-            second = second ?: 0,
-            millisecond = millisecond ?: 0,
-            zoneOffset = zoneOffset!!
-        )
+        return try {
+            KZonedDateTime(
+                year = year!!,
+                month = month!!,
+                day = dayOfMonth!!,
+                hour = hour ?: 0,
+                minute = minute ?: 0,
+                second = second ?: 0,
+                millisecond = millisecond ?: 0,
+                zoneOffset = zoneOffset!!
+            )
+        } catch (e: IllegalArgumentException) {
+            throw ParseDateTimeException(e.message)
+        }
     }
 
     @Deprecated("Use parseToKZonedDateTime(String).toKZonedInstant() instead")
