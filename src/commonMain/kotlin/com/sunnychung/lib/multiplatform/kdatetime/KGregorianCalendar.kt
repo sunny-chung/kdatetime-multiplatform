@@ -86,6 +86,20 @@ object KGregorianCalendar {
         return KDate(year = year, month = month, day = dayInMonth)
     }
 
+    fun validateDate(year: Int, month: Int, day: Int) {
+        if (month !in 1..12) {
+            throw IllegalArgumentException("`month` must be within 1 ~ 12.")
+        }
+        val numDaysInTheMonth = if (isLeapYear(year)) {
+            DAYS_PER_MONTH_IN_LEAP_YEAR[month - 1]
+        } else {
+            DAYS_PER_MONTH_IN_NON_LEAP_YEAR[month - 1]
+        }
+        if (day !in 1..numDaysInTheMonth) {
+            throw IllegalArgumentException("`day` must be within 1 ~ $numDaysInTheMonth for this month.")
+        }
+    }
+
     internal fun kZonedInstantFromLocalDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, millisecond: Int = 0, zoneOffset: KZoneOffset): KZonedInstant {
         if (!(1..12).contains(month)) {
             throw IllegalArgumentException("`month` must be 1 ~ 12.")

@@ -17,10 +17,9 @@ class KZonedDateTime(
     val zoneOffset: KZoneOffset
 ) : AndroidParcelable {
     init {
-        if (!(1..12).contains(month)) {
-            throw IllegalArgumentException("`month` must be 1 ~ 12.")
-        }
-        // TODO: validate all fields
+        validateTime(hour = hour, minute = minute, second = second, millisecond = millisecond)
+        // TODO: allow other calendars
+        KGregorianCalendar.validateDate(year = year, month = month, day = day)
     }
 
     private val calendar = KGregorianCalendar

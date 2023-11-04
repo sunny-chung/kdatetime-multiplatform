@@ -4,6 +4,7 @@ import kotlinx.datetime.Clock
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class KGregorianCalendarTest {
@@ -179,5 +180,71 @@ class KGregorianCalendarTest {
         ).run {
             assertEquals(-31877511999_000 + 456, toMilliseconds())
         }
+    }
+
+    @Test
+    fun validateInvalidDateShouldThrowError() {
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 2, day = 29)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 8, day = 32)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 4, day = 31)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 6, day = 31)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 9, day = 31)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 11, day = 31)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 13, day = 1)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 12, day = 0)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 0, day = 12)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = -1, day = 12)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2021, month = 1, day = -1)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2020, month = 2, day = 30)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 2000, month = 2, day = 30)
+        }
+        assertFailsWith(IllegalArgumentException::class) {
+            calendar.validateDate(year = 1900, month = 2, day = 29)
+        }
+    }
+
+    @Test
+    fun validateValidDateShouldPass() {
+        calendar.validateDate(year = 2023, month = 1, day = 1)
+        calendar.validateDate(year = 2023, month = 7, day = 25)
+        calendar.validateDate(year = 2023, month = 1, day = 31)
+        calendar.validateDate(year = 2023, month = 3, day = 31)
+        calendar.validateDate(year = 2023, month = 5, day = 31)
+        calendar.validateDate(year = 2023, month = 7, day = 31)
+        calendar.validateDate(year = 2023, month = 8, day = 31)
+        calendar.validateDate(year = 2023, month = 10, day = 31)
+        calendar.validateDate(year = 2023, month = 12, day = 31)
+        calendar.validateDate(year = 2023, month = 10, day = 30)
+        calendar.validateDate(year = 2023, month = 2, day = 28)
+        calendar.validateDate(year = 2020, month = 2, day = 29)
+        calendar.validateDate(year = 2000, month = 2, day = 29)
+        calendar.validateDate(year = 1900, month = 2, day = 28)
+        calendar.validateDate(year = 12345678, month = 7, day = 31)
+        calendar.validateDate(year = -1000000, month = 8, day = 31)
     }
 }

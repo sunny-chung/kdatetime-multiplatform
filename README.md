@@ -216,8 +216,7 @@ import shared
 - Only English is supported for locale-specific inputs and outputs
 
 # Known Issues
-- Date-time parser can only parse integers with exact length specified in the pattern. If this condition does not meet, exceptions might not be thrown, instead wrong result might be returned. 
-- In most of the cases, input values are not validated.
+- Date-time parser can only parse integers with exact length specified in the pattern. If this condition does not meet, exceptions might not be thrown, instead wrong result might be returned.
 
 # For Developers
 

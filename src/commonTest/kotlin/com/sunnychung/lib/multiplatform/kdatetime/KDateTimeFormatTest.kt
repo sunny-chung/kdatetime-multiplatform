@@ -96,4 +96,32 @@ class KDateTimeFormatTest {
             KDateTimeFormat(pattern = "MM-dd hh:mm:ss.lll").parseToKZonedInstant("anything")
         }
     }
+
+    @Test
+    fun parseIncorrectDateTimeThrowError() {
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("2023-02-29T01:23:45.678+08:00")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("2023-04-31T01:23:45.678+08:00")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("1900-02-29T01:23:45.678+08:00")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("2023-04-30T24:00:00.000+08:00")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("2023-04-30T23:60:00.000+08:00")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("2023-04-30T23:00:60.000+08:00")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("2023-04-30T23:00:00.1000+08:00")
+        }
+        assertFailsWith(ParseDateTimeException::class) {
+            KDateTimeFormat.FULL.parseToKZonedDateTime("2023-04-30T23:00:00.-12+08:00")
+        }
+    }
 }
