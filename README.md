@@ -209,7 +209,7 @@ import shared
 ```
 
 # Limitations
-- Only timestamps between year 0 to 2999 are supported
+- Only timestamps from year AD 1 to 2999 are supported
 - Minimum time unit is millisecond
 - Only English is supported for locale-specific inputs and outputs
 - Date-time parser can only parse integers with exact length specified in the pattern.
