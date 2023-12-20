@@ -50,11 +50,27 @@ kotlin {
         macosArm64(),
         macosX64()
     )
-    js(BOTH) {
+    /*
+        Not using IR because its running time is slower than Legacy for 3X that could not pass the tests.
+        Will use IR when Kotlin is upgraded to 1.9 which using IR is forced and may fix the issue.
+     */
+    js(LEGACY) {
         browser {
             commonWebpackConfig {
                 cssSupport {
                     enabled.set(true)
+                }
+            }
+            testTask {
+                useMocha {
+                    timeout = "11s"
+                }
+            }
+        }
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "11s"
                 }
             }
         }

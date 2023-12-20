@@ -1,5 +1,6 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import com.sunnychung.lib.multiplatform.kdatetime.KGregorianCalendar.addDays
 import kotlinx.datetime.Clock
 import kotlin.random.Random
 import kotlin.test.Test
@@ -237,5 +238,85 @@ class KGregorianCalendarTest {
         calendar.validateDate(year = 1900, month = 2, day = 28)
         calendar.validateDate(year = 12345678, month = 7, day = 31)
         calendar.validateDate(year = 1, month = 1, day = 1)
+    }
+
+    @Test
+    fun addOneDay() {
+        // there is no year AD 0 or 0 BC
+        var year = 1
+        var month = 1
+        var day = 1
+        while (year < 12000) { // about 4.4 million days in 12000 years
+            val date = KDate(year, month, day)
+            val nextDay = date.addDays(1)
+            if (++day > calendar.numOfDaysInMonth(year, month)) {
+                ++month
+                day = 1
+            }
+            if (month > 12) {
+                ++year
+                month = 1
+            }
+            assertEquals(KDate(year, month, day), nextDay)
+        }
+    }
+
+    @Test
+    fun subtractOneDay() {
+        // there is no year AD 0 or 0 BC
+        var year = 11999
+        var month = 12
+        var day = 31
+        while (year >= 1 && !(year == 1 && month == 1 && day == 1)) { // about 4.4 million days in 12000 years
+            val date = KDate(year, month, day)
+            val previousDay = date.addDays(-1)
+            if (--day < 1) {
+                --month
+                if (month < 1) {
+                    --year
+                    month = 12
+                }
+                day = calendar.numOfDaysInMonth(year, month)
+            }
+            assertEquals(KDate(year, month, day), previousDay)
+        }
+    }
+
+    @Test
+    fun dayOfWeek() {
+        val startingDate = KDate(2023, 11, 5)
+        val startingDayOfWeek = 0 // Sunday
+
+        var date = startingDate
+        var expectedDayOfWeek = startingDayOfWeek
+        while (date.year < 12000) {
+            assertEquals(expectedDayOfWeek, calendar.dayOfWeek(date.year, date.month, date.day))
+
+            date = date.addDays(1)
+            expectedDayOfWeek = (expectedDayOfWeek + 1) % 7
+        }
+
+        date = startingDate
+        expectedDayOfWeek = startingDayOfWeek
+        while (date.year >= 1) {
+            assertEquals(expectedDayOfWeek, calendar.dayOfWeek(date.year, date.month, date.day))
+
+            if (date.year == 1 && date.month == 1 && date.day == 1) {
+                break
+            }
+            date = date.addDays(-1)
+            expectedDayOfWeek = ((expectedDayOfWeek - 1) + 7) % 7
+        }
+
+        assertEquals(5, calendar.dayOfWeek(1987, 1, 23))
+        assertEquals(3, calendar.dayOfWeek(2038, 10, 20))
+        assertEquals(6, calendar.dayOfWeek(2000, 7, 29))
+        assertEquals(1, calendar.dayOfWeek(1915, 4, 5))
+        assertEquals(2, calendar.dayOfWeek(1900, 11, 6))
+        assertEquals(4, calendar.dayOfWeek(1752, 9, 14))
+        // there was calendar switch at 14 Sept 1752. See https://www.timeanddate.com/calendar/julian-gregorian-switch.html
+        // Before this date, Gregorian calendar should not be used
+
+        assertEquals(4, calendar.dayOfWeek(3999, 12, 30))
     }
 }

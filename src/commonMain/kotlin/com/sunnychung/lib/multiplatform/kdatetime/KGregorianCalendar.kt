@@ -7,6 +7,9 @@ object KGregorianCalendar {
     private val ACCUMULATED_DAYS_PER_MONTH_IN_NON_LEAP_YEAR = accumulateList(DAYS_PER_MONTH_IN_NON_LEAP_YEAR)
     private val ACCUMULATED_DAYS_PER_MONTH_IN_LEAP_YEAR = accumulateList(DAYS_PER_MONTH_IN_LEAP_YEAR)
 
+    private val DAY_OF_WEEK_OFFSET_PER_MONTH_IN_NON_LEAP_YEARS = listOf(0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5)
+    private val DAY_OF_WEEK_OFFSET_PER_MONTH_IN_LEAP_YEARS = listOf(0, 3, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6)
+
 //    private val TIMESTAMP_MS_TO_YEAR: Map<Long, Int>
     private val YEAR_TO_TIMESTAMP_MS_MAP: Map<Int, Long>
     private val YEAR_TO_TIMESTAMP_MS_LIST: List<YearTimestampPair>
@@ -122,6 +125,58 @@ object KGregorianCalendar {
         val offsetMs = zoneOffset.toMilliseconds()
         val timestamp = msWithoutTimeZoneAdjustment - offsetMs
         return KZonedInstant(timestampMs = timestamp, zoneOffset = zoneOffset)
+    }
+
+    internal fun numOfDaysInMonth(year: Int, month: Int): Int {
+        validateDate(year, month, 1)
+
+        return if (isLeapYear(year)) {
+            DAYS_PER_MONTH_IN_LEAP_YEAR
+        } else {
+            DAYS_PER_MONTH_IN_NON_LEAP_YEAR
+        }[month - 1]
+    }
+
+    internal fun KDate.dayNumSincePseudoYear0(): Long {
+        // https://web.archive.org/web/20170507133619/https://alcor.concordia.ca/~gpkatch/gdate-algorithm.html
+        val m = (month + 9) % 12
+        val y = year - m / 10
+        return 365L * y + y / 4 - y / 100 + y / 400 + (m * 306L + 5) / 10 + (day - 1)
+    }
+
+    internal fun KDateFromDayNumSincePseudoYear0(dayNum: Long): KDate {
+        // https://web.archive.org/web/20170507133619/https://alcor.concordia.ca/~gpkatch/gdate-algorithm.html
+        var y = (10000L * dayNum + 14780) / 3652425
+        var ddd = dayNum - (365 * y + y / 4 - y / 100 + y / 400)
+        if (ddd < 0) {
+            --y
+            ddd = dayNum - (365 * y + y / 4 - y / 100 + y / 400)
+        }
+        val mi = (100 * ddd + 52) / 3060
+        val mm = (mi + 2) % 12 + 1
+        y += (mi + 2) / 12
+        val dd = ddd - (mi * 306 + 5) / 10 + 1
+        return KDate(y.toInt(), mm.toInt(), dd.toInt())
+    }
+
+    fun KDate.addDays(days: Int): KDate {
+        val adjustedDayNum: Long = dayNumSincePseudoYear0() + days
+        return KDateFromDayNumSincePseudoYear0(adjustedDayNum)
+    }
+
+    /**
+     * @return 0 = Sun, 1 = Mon, ... 6 = Sat
+     */
+    fun dayOfWeek(year: Int, month: Int, day: Int): Int {
+        validateDate(year = year, month = month, day = day)
+
+        // Gauss's algorithm
+        val monthOffset = (if (isLeapYear(year)) {
+            DAY_OF_WEEK_OFFSET_PER_MONTH_IN_LEAP_YEARS
+        } else {
+            DAY_OF_WEEK_OFFSET_PER_MONTH_IN_NON_LEAP_YEARS
+        })[month - 1]
+        return (day + monthOffset + 5 * ((year - 1) % 4) + 4 * ((year - 1) % 100) + 6 * ((year - 1) % 400)) % 7
     }
 
 }

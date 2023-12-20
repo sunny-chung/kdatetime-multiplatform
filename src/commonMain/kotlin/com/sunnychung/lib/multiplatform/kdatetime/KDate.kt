@@ -11,6 +11,11 @@ import com.sunnychung.lib.multiplatform.kdatetime.annotation.AndroidParcelize
 data class KDate(val year: Int, val month: Int, val day: Int) : AndroidParcelable {
     init {
         // TODO: allow other calendars
-        KGregorianCalendar.validateDate(year = year, month = month, day = day)
+        try {
+            KGregorianCalendar.validateDate(year = year, month = month, day = day)
+        } catch (e: Error) {
+            println("$this is invalid")
+            throw e
+        }
     }
 }
