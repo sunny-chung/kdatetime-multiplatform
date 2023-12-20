@@ -32,6 +32,8 @@ open class KInstant(private val timestampMs: Long) : KDateTimeFormattable, KPoin
         return KZonedInstant(timestampMs = timestampMs, zoneOffset = zoneOffset)
     }
 
+    fun atLocalZoneOffset(): KZonedInstant = atZoneOffset(KZoneOffset.local())
+
     override fun hashCode(): Int {
         return timestampMs.hashCode()
     }
