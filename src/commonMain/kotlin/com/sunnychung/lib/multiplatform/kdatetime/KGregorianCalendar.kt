@@ -18,14 +18,14 @@ object KGregorianCalendar {
         val yearTimestampPairsOnOrAfter1970 = mutableListOf<YearTimestampPair>()
         val yearTimestampPairsBefore1970 = mutableListOf<YearTimestampPair>()
         // TODO: year range can be extended manually
-        (1970..3000).forEachIndexed { index, it ->
+        (1970..4000).forEachIndexed { index, it ->
             yearTimestampPairsOnOrAfter1970 += YearTimestampPair(
                 year = it,
                 timestampMs = if (index == 0) 0 else (yearTimestampPairsOnOrAfter1970.last().timestampMs +
                         numOfDaysInYear(it - 1) * KFixedTimeUnit.Day.ratioToMillis)
             )
         }
-        (1969 downTo 0).forEachIndexed { index, it ->
+        (1969 downTo 1753).forEachIndexed { index, it ->
             yearTimestampPairsBefore1970 += YearTimestampPair(
                 year = it,
                 timestampMs = (if (index == 0) 0 else yearTimestampPairsBefore1970.last().timestampMs) -
@@ -87,6 +87,9 @@ object KGregorianCalendar {
     }
 
     fun validateDate(year: Int, month: Int, day: Int) {
+        if (year < 1) {
+            throw UnsupportedOperationException("Years earlier than AD 1 are not supported.")
+        }
         if (month !in 1..12) {
             throw IllegalArgumentException("`month` must be within 1 ~ 12.")
         }
@@ -97,6 +100,9 @@ object KGregorianCalendar {
         }
         if (day !in 1..numDaysInTheMonth) {
             throw IllegalArgumentException("`day` must be within 1 ~ $numDaysInTheMonth for this month.")
+        }
+        if (year < 1752 || (year == 1752 && month < 9 || (month == 9 && day < 14))) {
+            "Warning: the dates are inaccurate to be used with the Gregorian calendar. See https://www.timeanddate.com/calendar/julian-gregorian-switch.html"
         }
     }
 

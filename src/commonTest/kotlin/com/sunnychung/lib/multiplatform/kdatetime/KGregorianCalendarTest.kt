@@ -67,21 +67,6 @@ class KGregorianCalendarTest {
             assertEquals(11, month)
             assertEquals(9, day)
         }
-        calendar.utcDateFromTimestamp(-31877452801_000).run {
-            assertEquals(959, year)
-            assertEquals(11, month)
-            assertEquals(4, day)
-        }
-        calendar.utcDateFromTimestamp(-31877452801_000 + 789).run {
-            assertEquals(959, year)
-            assertEquals(11, month)
-            assertEquals(4, day)
-        }
-        calendar.utcDateFromTimestamp(-31877452801_000 + 1000).run {
-            assertEquals(959, year)
-            assertEquals(11, month)
-            assertEquals(5, day)
-        }
     }
 
     @Test
@@ -169,21 +154,21 @@ class KGregorianCalendarTest {
         }
 
         calendar.kZonedInstantFromLocalDate(
-            year = 959,
-            month = 11,
-            day = 4,
-            hour = 7,
-            minute = 33,
-            second = 21,
-            millisecond = 456,
+            year = 1753,
+            month = 1,
+            day = 1,
+            hour = 0,
+            minute = 0,
+            second = 0,
+            millisecond = 0,
             zoneOffset = KZoneOffset(0, 0)
         ).run {
-            assertEquals(-31877511999_000 + 456, toMilliseconds())
+            assertEquals(-6847804800_000, toMilliseconds())
         }
     }
 
     @Test
-    fun validateInvalidDateShouldThrowError() {
+    fun validateInvalidOrUnsupportedDateShouldThrowError() {
         assertFailsWith(IllegalArgumentException::class) {
             calendar.validateDate(year = 2021, month = 2, day = 29)
         }
@@ -226,10 +211,16 @@ class KGregorianCalendarTest {
         assertFailsWith(IllegalArgumentException::class) {
             calendar.validateDate(year = 1900, month = 2, day = 29)
         }
+        assertFailsWith(UnsupportedOperationException::class) {
+            calendar.validateDate(year = 0, month = 1, day = 1)
+        }
+        assertFailsWith(UnsupportedOperationException::class) {
+            calendar.validateDate(year = -2, month = 1, day = 1)
+        }
     }
 
     @Test
-    fun validateValidDateShouldPass() {
+    fun validateValidSupportedDateShouldPass() {
         calendar.validateDate(year = 2023, month = 1, day = 1)
         calendar.validateDate(year = 2023, month = 7, day = 25)
         calendar.validateDate(year = 2023, month = 1, day = 31)
@@ -245,6 +236,6 @@ class KGregorianCalendarTest {
         calendar.validateDate(year = 2000, month = 2, day = 29)
         calendar.validateDate(year = 1900, month = 2, day = 28)
         calendar.validateDate(year = 12345678, month = 7, day = 31)
-        calendar.validateDate(year = -1000000, month = 8, day = 31)
+        calendar.validateDate(year = 1, month = 1, day = 1)
     }
 }
