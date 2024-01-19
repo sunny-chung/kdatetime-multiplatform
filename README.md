@@ -80,6 +80,12 @@ println(parsedDateTime.toMilliseconds()) // 1694391533000
 val duration1 = 95.seconds()
 println(duration1.format("m:ss")) // 1:35
 println(duration1.format("m'm' s's'")) // 1m 35s
+
+val dateTime = KInstant(1705677172000) // Friday, January 19, 2024 3:12:52 PM GMT
+val formatter = KDateTimeFormat("E")
+println(formatter.format(dateTime)) // Fri
+formatter.weekDayNames = listOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
+println(formatter.format(dateTime)) // 星期五
 ```
 
 ## Conversions

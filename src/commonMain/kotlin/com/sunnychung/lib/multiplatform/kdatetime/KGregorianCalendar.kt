@@ -179,4 +179,6 @@ object KGregorianCalendar {
         return (day + monthOffset + 5 * ((year - 1) % 4) + 4 * ((year - 1) % 100) + 6 * ((year - 1) % 400)) % 7
     }
 
+    fun KDate.dayOfWeek(): Int = dayOfWeek(year = year, month = month, day = day)
+
 }

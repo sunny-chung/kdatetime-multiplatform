@@ -1,28 +1,38 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import com.sunnychung.lib.multiplatform.kdatetime.KGregorianCalendar.dayOfWeek
+
 /**
  * Formats:
  *
- * Symbol   Meaning             Examples
- * ------   -------             --------
- * y        year                2023; 23
- * M        month               7; 07
- * d        day of month        9; 09; 31
+ * Symbol   Meaning                     Examples
+ * ------   -------                     --------
+ * y        year                        2023; 23
+ * M        month                       7; 07
+ * d        day of month                9; 09; 31
  *
- * H        hour (0~23)         0; 00; 18
- * h        hour (1~12)         6; 06; 10
- * m        minute              4; 04; 58
- * s        second              5; 05; 59
- * l        millisecond         12; 120; 123
+ * H        hour (0~23)                 0; 00; 18
+ * h        hour (1~12)                 6; 06; 10
+ * m        minute                      4; 04; 58
+ * s        second                      5; 05; 59
+ * l        millisecond                 12; 120; 123
  *
- * aa       am/pm               am; pm
- * AA       AM/PM               AM; PM
+ * aa       am/pm                       am; pm
+ * AA       AM/PM                       AM; PM
+ * e        Day of week. 0=Sun, 6=Sat.  1
+ * E        Day of week.                Mon
  *
  * Z        Time zone offset    +08:00
  *
  * '        Literal         '
  */
 class KDateTimeFormat(val pattern: String) {
+
+    var weekDayNames = WEEKDAY_NAMES
+        set(value) {
+            if (value.size != 7) throw IllegalArgumentException("`weekDayNames` must be a list of 7 string elements")
+            field = value.toList()
+        }
 
     enum class FormatTokenType(val hasLengthLimit: Boolean = true, val allowedLengths: List<Int> = listOf()) {
         Literial(hasLengthLimit = false),
@@ -36,6 +46,8 @@ class KDateTimeFormat(val pattern: String) {
         Millisecond(allowedLengths = listOf(1, 2, 3)),
         ampm(allowedLengths = listOf(2)),
         AMPM(allowedLengths = listOf(2)),
+        DayOfWeekNumber(allowedLengths = listOf(1)),
+        DayOfWeek(allowedLengths = listOf(1)),
         TimeZone(allowedLengths = listOf(1))
     }
 
@@ -86,6 +98,8 @@ class KDateTimeFormat(val pattern: String) {
                     'l' -> FormatTokenType.Millisecond
                     'a' -> FormatTokenType.ampm
                     'A' -> FormatTokenType.AMPM
+                    'e' -> FormatTokenType.DayOfWeekNumber
+                    'E' -> FormatTokenType.DayOfWeek
                     'Z' -> FormatTokenType.TimeZone
                     else -> FormatTokenType.Literial
                 }
@@ -136,6 +150,8 @@ class KDateTimeFormat(val pattern: String) {
                 FormatTokenType.Millisecond -> s.append(localDateTime.millisecondPart().toString().padStart(3, '0').trimEnd('0').padEnd(it.length, '0'))
                 FormatTokenType.ampm -> s.append(if (localDateTime.hourPart() < 12) "am" else "pm")
                 FormatTokenType.AMPM -> s.append(if (localDateTime.hourPart() < 12) "AM" else "PM")
+                FormatTokenType.DayOfWeekNumber -> s.append(localDate.dayOfWeek())
+                FormatTokenType.DayOfWeek -> s.append(weekDayNames[localDate.dayOfWeek()])
                 FormatTokenType.TimeZone -> when (datetime) {
                     is KZonedInstant -> s.append(datetime.zoneOffset.toDisplayString())
                     is KInstant -> s.append("Z")
@@ -296,6 +312,8 @@ class KDateTimeFormat(val pattern: String) {
         // order of the list matters
         val ISO8601_FORMATS = listOf(FULL, ISO8601_DATETIME)
         val IOS_DATE_FORMATS = listOf(FULL, ISO8601_DATETIME, KDateTimeFormat("yyyy-MM-dd'T'HH:mmZ"))
+
+        val WEEKDAY_NAMES = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
         internal val PARSER_COMPULSORY_INPUT_TYPES = setOf(
             FormatTokenType.Year,

@@ -142,4 +142,14 @@ class KDateTimeFormatTest {
             KDateTimeFormat("yyMMddhhmmsslllaaZ").parseToKZonedInstant("23091102541923amZ")
         }
     }
+
+    @Test
+    fun formatDayOfWeek() {
+        val dateTime = KInstant(1705677172000) // Friday, January 19, 2024 3:12:52 PM GMT
+        assertEquals("5", dateTime.format("e"))
+        val formatter = KDateTimeFormat("E")
+        assertEquals("Fri", formatter.format(dateTime))
+        formatter.weekDayNames = listOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
+        assertEquals("星期五", formatter.format(dateTime))
+    }
 }
