@@ -50,4 +50,10 @@ class KZonedDateTimeTest {
         val dateTime2 = dateTime1 - KDuration.of(3, KFixedTimeUnit.Hour)
         assertEquals(1694409632_999 - 3 * 60 * 60 * 1000, dateTime2.toKZonedInstant().toEpochMilliseconds())
     }
+
+    @Test
+    fun format() {
+        val dateTime = KZonedDateTime(year = 2024, month = 1, day = 20, hour = 13, minute = 42, second = 29, zoneOffset = KZoneOffset(-7, 0))
+        assertEquals("2024-1-20 1:42:29 pm (-07:00)", dateTime.format("yyyy-M-d h:mm:ss aa (Z)"))
+    }
 }

@@ -65,6 +65,8 @@ class KZonedDateTime(
         )
     }
 
+    fun format(pattern: String) = KDateTimeFormat(pattern).format(toKZonedInstant())
+
     override fun toString(): String {
         return KDateTimeFormat.FULL.format(toKZonedInstant())
     }
