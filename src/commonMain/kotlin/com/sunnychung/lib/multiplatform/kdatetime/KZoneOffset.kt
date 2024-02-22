@@ -14,9 +14,9 @@ class KZoneOffset(val hours: Int, val minutes: Int) : AndroidParcelable {
 
     fun toMilliseconds(): Long = ms
 
-    fun toDisplayString(): String {
+    fun toDisplayString(isDisplayZ: Boolean = true): String {
         val s = StringBuilder()
-        if (ms == 0L) {
+        if (ms == 0L && isDisplayZ) {
             s.append("Z")
         } else {
             val offset = KDuration.of(ms.absoluteValue, KFixedTimeUnit.MilliSecond)

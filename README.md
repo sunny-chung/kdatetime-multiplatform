@@ -22,7 +22,6 @@ This library is going to be stable. All major features have been implemented, bu
 * [Examples](#examples)
 * [Getting Started](#getting-started)
 * [Limitations](#limitations)
-* [Known Issues](#known-issues)
 * [For Developers](#for-developers)
 
 # Supported Platforms
@@ -88,6 +87,7 @@ val formatter = KDateTimeFormat("E")
 println(formatter.format(dateTime)) // Fri
 formatter.weekDayNames = listOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
 println(formatter.format(dateTime)) // 星期五
+println(dateTime.format("yyyy-MM-dd HH:mm:ss (z)")) // 2024-01-19 15:12:52 (+00:00)
 ```
 
 ## Conversions

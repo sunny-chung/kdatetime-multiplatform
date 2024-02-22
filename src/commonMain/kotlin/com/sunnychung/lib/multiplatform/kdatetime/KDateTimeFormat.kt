@@ -22,7 +22,8 @@ import com.sunnychung.lib.multiplatform.kdatetime.KGregorianCalendar.dayOfWeek
  * e        Day of week. 0=Sun, 6=Sat.  1
  * E        Day of week.                Mon
  *
- * Z        Time zone offset    +08:00
+ * Z        Time zone offset or 'Z'     Z; +08:00
+ * z        Time zone offset            +00:00; +08:00
  *
  * '        Literal         '
  */
@@ -48,7 +49,8 @@ class KDateTimeFormat(val pattern: String) {
         AMPM(allowedLengths = listOf(2)),
         DayOfWeekNumber(allowedLengths = listOf(1)),
         DayOfWeek(allowedLengths = listOf(1)),
-        TimeZone(allowedLengths = listOf(1))
+        TimeZoneOffsetOrZ(allowedLengths = listOf(1)),
+        TimeZoneOffset(allowedLengths = listOf(1)),
     }
 
     data class FormatToken(val type: FormatTokenType, val length: Int, val literal: String? = null)
@@ -100,7 +102,8 @@ class KDateTimeFormat(val pattern: String) {
                     'A' -> FormatTokenType.AMPM
                     'e' -> FormatTokenType.DayOfWeekNumber
                     'E' -> FormatTokenType.DayOfWeek
-                    'Z' -> FormatTokenType.TimeZone
+                    'Z' -> FormatTokenType.TimeZoneOffsetOrZ
+                    'z' -> FormatTokenType.TimeZoneOffset
                     else -> FormatTokenType.Literial
                 }
             }
@@ -152,9 +155,14 @@ class KDateTimeFormat(val pattern: String) {
                 FormatTokenType.AMPM -> s.append(if (localDateTime.hourPart() < 12) "AM" else "PM")
                 FormatTokenType.DayOfWeekNumber -> s.append(localDate.dayOfWeek())
                 FormatTokenType.DayOfWeek -> s.append(weekDayNames[localDate.dayOfWeek()])
-                FormatTokenType.TimeZone -> when (datetime) {
+                FormatTokenType.TimeZoneOffsetOrZ -> when (datetime) {
                     is KZonedInstant -> s.append(datetime.zoneOffset.toDisplayString())
                     is KInstant -> s.append("Z")
+                    else -> throw UnsupportedOperationException("${datetime::class.simpleName} has no timezone support")
+                }
+                FormatTokenType.TimeZoneOffset -> when (datetime) {
+                    is KZonedInstant -> s.append(datetime.zoneOffset.toDisplayString(isDisplayZ = false))
+                    is KInstant -> s.append("+00:00")
                     else -> throw UnsupportedOperationException("${datetime::class.simpleName} has no timezone support")
                 }
             }
@@ -239,7 +247,7 @@ class KDateTimeFormat(val pattern: String) {
                     FormatTokenType.Millisecond -> millisecond = inputSubstring.toInt()
                     FormatTokenType.ampm -> amPm = parseAmPm(inputSubstring)
                     FormatTokenType.AMPM -> amPm = parseAmPm(inputSubstring)
-                    FormatTokenType.TimeZone -> {
+                    FormatTokenType.TimeZoneOffsetOrZ -> {
                         val longerSubstring = input.substring(startIndex)
                         length = if (longerSubstring.startsWith("Z")) {
                             1
@@ -321,7 +329,7 @@ class KDateTimeFormat(val pattern: String) {
             FormatTokenType.DayOfMonth,
             FormatTokenType.Minute,
 //            FormatTokenType.Second,
-            FormatTokenType.TimeZone
+            FormatTokenType.TimeZoneOffsetOrZ
         )
 
         private val AM = 0

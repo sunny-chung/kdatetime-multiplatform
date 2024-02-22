@@ -10,6 +10,7 @@ class KDateTimeFormatTest {
         val dateTime = KInstant(1694400859230) // Monday, September 11, 2023 2:54:19.230 AM
         assertEquals("2023/09/11 2:54:19.23 AM", dateTime.format("yyyy/MM/dd h:mm:ss.l AA"))
         assertEquals("23-09-11 02:54:19am", dateTime.format("yy-MM-dd hh:mm:ssaa"))
+
         assertEquals("2023-09-11T02:54:19Z", KDateTimeFormat.ISO8601_DATETIME.format(dateTime))
         assertEquals("2023-09-11T02:54:19.230Z", dateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ"))
 
@@ -18,18 +19,24 @@ class KDateTimeFormatTest {
 
         val dateTime3 = KInstant(1694455980000) // Monday, September 11, 2023 6:13:00 PM
         assertEquals("2023-09-11T18:13:00.000Z", dateTime3.format("yyyy-MM-dd'T'HH:mm:ss.lllZ"))
+        assertEquals("2023-09-11T18:13:00.000+00:00", dateTime3.format("yyyy-MM-dd'T'HH:mm:ss.lllz"))
     }
 
     @Test
     fun formatZonedInstant() {
         val dateTime = KZonedInstant(1694404171789, "+08:00") // Monday, September 11, 2023 11:49:31.789 AM GMT+08:00
         assertEquals("2023-09-11T11:49:31.789+08:00", dateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ"))
+        assertEquals("2023-09-11T11:49:31.789+08:00", dateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllz"))
 
         val dateTime2 = KZonedInstant(1694391533000, "-07:00") // 2023-09-10 17:18:53 -07:00
         assertEquals("2023-09-10T17:18:53-07:00", KDateTimeFormat.ISO8601_DATETIME.format(dateTime2))
 
         val dateTime3 = KZonedInstant(1694360033000, "+13:45") // 2023-09-11T05:18:53+13:45
         assertEquals("2023-09-11T05:18:53+13:45", KDateTimeFormat.ISO8601_DATETIME.format(dateTime3))
+
+        val dateTime4 = KZonedInstant(1694404171789, "UTC") // Monday, September 11, 2023 3:49:31.789 AM GMT
+        assertEquals("2023-09-11T03:49:31.789Z", dateTime4.format("yyyy-MM-dd'T'HH:mm:ss.lllZ"))
+        assertEquals("2023-09-11T03:49:31.789+00:00", dateTime4.format("yyyy-MM-dd'T'HH:mm:ss.lllz"))
     }
 
     @Test
