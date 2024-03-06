@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "io.github.sunny-chung"
-version = "0.6.1"
+version = "0.6.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
