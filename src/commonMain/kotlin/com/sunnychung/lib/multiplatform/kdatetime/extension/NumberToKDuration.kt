@@ -4,8 +4,10 @@ import com.sunnychung.lib.multiplatform.kdatetime.KDuration
 import com.sunnychung.lib.multiplatform.kdatetime.KFixedTimeUnit
 
 fun Int.milliseconds() = KDuration.of(this, KFixedTimeUnit.MilliSecond)
+fun Long.milliseconds() = KDuration.of(this, KFixedTimeUnit.MilliSecond)
 
 fun Int.seconds() = KDuration.of(this, KFixedTimeUnit.Second)
+fun Long.seconds() = KDuration.of(this, KFixedTimeUnit.Second)
 
 fun Int.minutes() = KDuration.of(this, KFixedTimeUnit.Minute)
 
