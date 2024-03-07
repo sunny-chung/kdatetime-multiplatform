@@ -94,7 +94,7 @@ println(dateTime.format("yyyy-MM-dd HH:mm:ss (z)")) // 2024-01-19 15:12:52 (+00:
 Time unit conversions.
 ```kotlin
 val twoMinutes = 2.minutes()
-println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
+println(twoMinutes.toSeconds()) // 120
 ```
 
 ## Arithmetic, Comparison

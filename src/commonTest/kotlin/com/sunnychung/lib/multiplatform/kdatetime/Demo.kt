@@ -47,7 +47,7 @@ class Demo {
         /* Conversions */
 
         val twoMinutes = 2.minutes()
-        println(twoMinutes.toTimeUnitValue(KFixedTimeUnit.Second)) // 120
+        println(twoMinutes.toSeconds()) // 120
 
         /* Arithmetic, Comparison */
 

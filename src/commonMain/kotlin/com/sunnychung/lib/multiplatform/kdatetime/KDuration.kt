@@ -8,9 +8,15 @@ open class KDuration internal constructor(val millis: Long) : KDateTimeFormattab
 
     override fun toMilliseconds(): Long = millis
 
-    fun toTimeUnitValue(targetUnit: KFixedTimeUnit): Long {
+    inline fun toTimeUnitValue(targetUnit: KFixedTimeUnit): Long {
         return millis / targetUnit.ratioToMillis
     }
+
+    inline fun toSeconds() = toTimeUnitValue(KFixedTimeUnit.Second)
+    inline fun toMinutes() = toTimeUnitValue(KFixedTimeUnit.Minute)
+    inline fun toHours() = toTimeUnitValue(KFixedTimeUnit.Hour)
+    inline fun toDays() = toTimeUnitValue(KFixedTimeUnit.Day)
+    inline fun toWeeks() = toTimeUnitValue(KFixedTimeUnit.Week)
 
     operator fun plus(other: KDuration): KDuration {
         return KDuration(millis + other.millis)
