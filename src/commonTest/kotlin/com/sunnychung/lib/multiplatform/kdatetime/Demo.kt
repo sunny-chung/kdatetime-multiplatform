@@ -18,7 +18,7 @@ class Demo {
         val localZoneOffset = KZoneOffset.local()
         println(localZoneOffset.toDisplayString()) // +08:00
 
-        val localDateTime = now.atZoneOffset(localZoneOffset)
+        val localDateTime = now.atZoneOffset(localZoneOffset) // or now.atLocalZoneOffset()
         println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ")) // 2023-09-13T23:17:22.720+08:00
         println(localDateTime.format("yyyy-MM-dd h:mm:ss aa")) // 2023-09-13 11:17:22 pm
 
@@ -26,6 +26,7 @@ class Demo {
 
         val japanDateTime = now.atZoneOffset(KZoneOffset(9, 0))
         println(japanDateTime) // 2023-09-14T00:17:22.720+09:00
+        println(now at KZoneOffset(9, 0)) // 2023-09-14T00:17:22.720+09:00
 
         val lastTrainTime = localDateTime.toKZonedDateTime().copy(hour = 23, minute = 10, second = 0, millisecond = 0)
         println(KDateTimeFormat.ISO8601_DATETIME.format(lastTrainTime.toKZonedInstant())) // 2023-09-13T23:10:00+08:00

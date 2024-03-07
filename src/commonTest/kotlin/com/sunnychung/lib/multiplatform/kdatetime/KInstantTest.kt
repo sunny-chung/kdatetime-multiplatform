@@ -1,5 +1,6 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
+import com.sunnychung.lib.multiplatform.kdatetime.extension.seconds
 import kotlinx.datetime.Clock
 import kotlin.math.absoluteValue
 import kotlin.test.Test
@@ -37,7 +38,7 @@ class KInstantTest {
     @Test
     fun minus() {
         val t1 = KInstant(1694404171789)
-        val t2 = t1 - KDuration.of(12, KFixedTimeUnit.Second)
+        val t2 = t1 - 12.seconds()
         assertEquals(1694404171789 - 12 * 1000, t2.toEpochMilliseconds())
     }
 }
