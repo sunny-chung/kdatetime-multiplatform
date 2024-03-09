@@ -50,31 +50,31 @@ class KDateTimeFormatTest {
 
     @Test
     fun parseDateTimeToKZonedInstant() {
-        KDateTimeFormat.FULL.parseToKZonedInstant("2023-09-11T11:49:31.789+08:00").let { dateTime ->
+        KDateTimeFormat.FULL.parseToKZonedDateTime("2023-09-11T11:49:31.789+08:00").toKZonedInstant().let { dateTime ->
             assertEquals(1694404171789, dateTime.toMilliseconds())
             assertEquals(8, dateTime.zoneOffset.hours)
             assertEquals(0, dateTime.zoneOffset.minutes)
         }
 
-        KDateTimeFormat.ISO8601_DATETIME.parseToKZonedInstant("2023-09-10T17:18:53-07:00").let { dateTime ->
+        KDateTimeFormat.ISO8601_DATETIME.parseToKZonedDateTime("2023-09-10T17:18:53-07:00").toKZonedInstant().let { dateTime ->
             assertEquals(1694391533000, dateTime.toMilliseconds())
             assertEquals(-7, dateTime.zoneOffset.hours)
             assertEquals(0, dateTime.zoneOffset.minutes)
         }
 
-        KDateTimeFormat.ISO8601_DATETIME.parseToKZonedInstant("2023-09-11T05:18:53+13:45").let { dateTime ->
+        KDateTimeFormat.ISO8601_DATETIME.parseToKZonedDateTime("2023-09-11T05:18:53+13:45").toKZonedInstant().let { dateTime ->
             assertEquals(1694360033000, dateTime.toMilliseconds())
             assertEquals(13, dateTime.zoneOffset.hours)
             assertEquals(45, dateTime.zoneOffset.minutes)
         }
 
-        KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedInstant("23-09-11 02:54:19.230amZ").let { dateTime ->
+        KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedDateTime("23-09-11 02:54:19.230amZ").toKZonedInstant().let { dateTime ->
             assertEquals(1694400859230, dateTime.toMilliseconds())
             assertEquals(0, dateTime.zoneOffset.hours)
             assertEquals(0, dateTime.zoneOffset.minutes)
         }
 
-        KDateTimeFormat("yy-MM-dd hh:mm:ssaaZ").parseToKZonedInstant("23-09-11 02:54:19pmUTC").let { dateTime ->
+        KDateTimeFormat("yy-MM-dd hh:mm:ssaaZ").parseToKZonedDateTime("23-09-11 02:54:19pmUTC").toKZonedInstant().let { dateTime ->
             assertEquals(1694444059000, dateTime.toMilliseconds())
             assertEquals(0, dateTime.zoneOffset.hours)
             assertEquals(0, dateTime.zoneOffset.minutes)
@@ -83,7 +83,7 @@ class KDateTimeFormatTest {
 
     @Test
     fun parseDateTimeToKInstant() {
-        KDateTimeFormat.FULL.parseToKInstant("2023-09-11T11:49:31.789+08:00").let { dateTime ->
+        KDateTimeFormat.FULL.parseToKZonedDateTime("2023-09-11T11:49:31.789+08:00").toKInstant().let { dateTime ->
             assertEquals(1694404171789, dateTime.toMilliseconds())
         }
     }
@@ -91,16 +91,16 @@ class KDateTimeFormatTest {
     @Test
     fun cannotParseWithoutEnoughFields() {
         assertFailsWith(IllegalArgumentException::class) {
-            KDateTimeFormat(pattern = "mm:ss").parseToKZonedInstant("anything")
+            KDateTimeFormat(pattern = "mm:ss").parseToKZonedDateTime("anything")
         }
         assertFailsWith(IllegalArgumentException::class) {
-            KDateTimeFormat(pattern = "yyyy-MM-dd").parseToKZonedInstant("anything")
+            KDateTimeFormat(pattern = "yyyy-MM-dd").parseToKZonedDateTime("anything")
         }
         assertFailsWith(IllegalArgumentException::class) {
-            KDateTimeFormat(pattern = "yyyy-MM-dd hh:ss.lll").parseToKZonedInstant("anything")
+            KDateTimeFormat(pattern = "yyyy-MM-dd hh:ss.lll").parseToKZonedDateTime("anything")
         }
         assertFailsWith(IllegalArgumentException::class) {
-            KDateTimeFormat(pattern = "MM-dd hh:mm:ss.lll").parseToKZonedInstant("anything")
+            KDateTimeFormat(pattern = "MM-dd hh:mm:ss.lll").parseToKZonedDateTime("anything")
         }
     }
 
@@ -135,18 +135,18 @@ class KDateTimeFormatTest {
     @Test
     fun parseAmbiguousFormat() {
         assertFailsWith(ParseDateTimeException::class) {
-            KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedInstant("23-09--1 02:54:19.230amZ")
+            KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedDateTime("23-09--1 02:54:19.230amZ")
         }
         assertFailsWith(ParseDateTimeException::class) {
-            KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedInstant("23-09-01 2:54:19.230amZ")
+            KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedDateTime("23-09-01 2:54:19.230amZ")
         }
 
-        KDateTimeFormat("yyMMddhhmmsslllaaZ").parseToKZonedInstant("230911025419230amZ").let { dateTime ->
+        KDateTimeFormat("yyMMddhhmmsslllaaZ").parseToKZonedDateTime("230911025419230amZ").toKZonedInstant().let { dateTime ->
 //            println(dateTime)
             assertEquals(1694400859230, dateTime.toMilliseconds())
         }
         assertFailsWith(ParseDateTimeException::class) {
-            KDateTimeFormat("yyMMddhhmmsslllaaZ").parseToKZonedInstant("23091102541923amZ")
+            KDateTimeFormat("yyMMddhhmmsslllaaZ").parseToKZonedDateTime("23091102541923amZ")
         }
     }
 
