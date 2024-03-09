@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install mkdocs-material mkdocs-nav-weight
-      - run: mkdocs build --site-dir output
+      - run: cd doc && mkdocs build --site-dir output
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
