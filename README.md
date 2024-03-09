@@ -129,6 +129,17 @@ val zonedDateTime2 = zonedDateTime + duration2
 println(zonedDateTime2) // 2023-10-04T13:10:15.000+08:00
 
 println(10_000.milliseconds() > 9.seconds()) // true
+
+val closedTimeRange = KInstant(1709975163000) .. KInstant(1709975173000)
+println(KZonedInstant(timestampMs = 1709975165000, zoneOffset = KZoneOffset(8, 0)) in closedTimeRange) // true
+
+val openTimeRange = KZonedInstant(1709975163000, KZoneOffset(1, 0)) ..< KZonedInstant(1709975173000, KZoneOffset(1, 0))
+println(KInstant(timestampMs = 1709975165000) in openTimeRange) // true
+```
+
+To use the `in` operator, manual importing an extension function is needed:
+```kotlin
+import com.sunnychung.lib.multiplatform.kdatetime.extension.contains
 ```
 
 ## Serialization, Deserialization
