@@ -2,7 +2,7 @@
 
 ![GitHub License](https://img.shields.io/github/license/sunny-chung/kdatetime-multiplatform)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.sunny-chung/kdatetime-multiplatform)
-![Verification Test](https://github.com/github/docs/actions/workflows/run-test.yaml/badge.svg?branch=main)
+![Verification Test Status](https://github.com/sunny-chung/kdatetime-multiplatform/actions/workflows/run-test.yaml/badge.svg?branch=main)
 
 ![Android](https://img.shields.io/badge/Android-blue)
 ![JVM](https://img.shields.io/badge/JVM-blue)

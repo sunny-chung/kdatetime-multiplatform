@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 plugins {
@@ -63,14 +64,14 @@ kotlin {
             }
             testTask {
                 useMocha {
-                    timeout = "21s"
+                    timeout = "31s" // GitHub Actions Mac runners are significantly slower
                 }
             }
         }
         nodejs {
             testTask {
                 useMocha {
-                    timeout = "21s"
+                    timeout = "31s" // GitHub Actions Mac runners are significantly slower
                 }
             }
         }
@@ -165,6 +166,12 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 24
+    }
+}
+
+tasks.withType<Test> {
+    testLogging {
+        events = setOf(TestLogEvent.STARTED, TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
     }
 }
 
