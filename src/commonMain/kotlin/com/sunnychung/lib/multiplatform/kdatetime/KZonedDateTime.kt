@@ -37,6 +37,10 @@ class KZonedDateTime(
         )
     }
 
+    inline fun toKInstant(): KInstant {
+        return toKZonedInstant().dropZoneOffset()
+    }
+
     fun datePart(): KDate = KDate(year, month, day)
 
     fun startOfDay(): KZonedDateTime {
