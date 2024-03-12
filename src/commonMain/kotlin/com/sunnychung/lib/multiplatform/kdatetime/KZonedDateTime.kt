@@ -75,6 +75,14 @@ class KZonedDateTime(
         return KDateTimeFormat.FULL.format(toKZonedInstant())
     }
 
+    fun toIso8601String(): String {
+        return KDateTimeFormat.ISO8601_DATETIME.format(toKZonedInstant())
+    }
+
+    fun toIso8601StringWithMilliseconds(): String {
+        return KDateTimeFormat.FULL.format(toKZonedInstant())
+    }
+
     operator fun plus(duration: KDuration): KZonedDateTime {
         return (toKZonedInstant() + duration).toKZonedDateTime()
     }

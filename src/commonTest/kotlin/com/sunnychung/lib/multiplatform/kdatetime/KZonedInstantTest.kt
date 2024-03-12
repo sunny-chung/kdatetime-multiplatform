@@ -80,4 +80,11 @@ class KZonedInstantTest {
             assertEquals(1694409632_999 - 7 * 1000, toMilliseconds())
         }
     }
+
+    @Test
+    fun toIso8601String() {
+        val zonedInstant = KZonedInstant(timestampMs = 1710212523_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0))
+        assertEquals("2024-03-12T11:02:03+08:00", zonedInstant.toIso8601String())
+        assertEquals("2024-03-12T11:02:03.999+08:00", zonedInstant.toIso8601StringWithMilliseconds())
+    }
 }

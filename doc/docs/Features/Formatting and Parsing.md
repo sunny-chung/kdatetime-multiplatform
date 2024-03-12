@@ -30,6 +30,8 @@ Supported formats are as follows:
 
 ### Formatting Dates, Times and Timezone Offsets
 
+Custom Formats
+
 ```kotlin
 val now = KInstant(timestampMs = 1694618242720)
 
@@ -40,6 +42,22 @@ println(localDateTime.format("yyyy-M-d h:mm:ss aa")) // 2023-9-13 11:17:22 pm
 val utcTime = now at KZoneOffset(0, 0)
 println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ")) // 2023-09-13T15:17:22.720Z
 println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllz")) // 2023-09-13T15:17:22.720+00:00
+```
+
+ISO 8601 Formats
+
+```kotlin
+val instant = KInstant(timestampMs = 1710212523_999)
+println(instant.toIso8601String()) // 2024-03-12T03:02:03Z
+println(instant.toIso8601StringWithMilliseconds()) // 2024-03-12T03:02:03.999Z
+
+val zonedInstant = KZonedInstant(timestampMs = 1710212523_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0))
+println(zonedInstant.toIso8601String()) // 2024-03-12T11:02:03+08:00
+println(zonedInstant.toIso8601StringWithMilliseconds()) // 2024-03-12T11:02:03.999+08:00
+
+val zonedDateTime = KZonedDateTime(year = 2024, month = 3, day = 12, hour = 5, minute = 12, second = 3, millisecond = 999, zoneOffset = KZoneOffset(hours = 8, minutes = 0))
+println(zonedDateTime.toIso8601String()) // 2024-03-12T05:12:03+08:00
+println(zonedDateTime.toIso8601StringWithMilliseconds()) // 2024-03-12T05:12:03.999+08:00
 ```
 
 ### Formatting Durations and Literals
@@ -70,7 +88,7 @@ val time2: KZonedInstant = KDateTimeFormat.ISO8601_DATETIME
     .parseToKZonedDateTime("2023-09-10T17:18:53-07:00")
     .toKZonedInstant()
     .also { dateTime ->
-        assertEquals(1694391533000, dateTime.toMilliseconds())
+        assertEquals(1694391533000, dateTime.toEpochMilliseconds())
         assertEquals(-7, dateTime.zoneOffset.hours)
         assertEquals(0, dateTime.zoneOffset.minutes)
     }
@@ -86,7 +104,7 @@ val time2: KZonedInstant = KDateTimeFormat.FULL
     .parseToKZonedDateTime("2023-09-10T17:18:53.123-07:00")
     .toKZonedInstant()
     .also { dateTime ->
-        assertEquals(1694391533123, dateTime.toMilliseconds())
+        assertEquals(1694391533123, dateTime.toEpochMilliseconds())
         assertEquals(-7, dateTime.zoneOffset.hours)
         assertEquals(0, dateTime.zoneOffset.minutes)
     }
@@ -104,7 +122,7 @@ val time2: KZonedInstant = KDateTimeFormat("yy-MM-dd hh:mm:ssaaZ")
     .parseToKZonedDateTime("23-09-11 02:54:19pmUTC")
     .toKZonedInstant()
     .also { dateTime ->
-        assertEquals(1694444059000, dateTime.toMilliseconds())
+        assertEquals(1694444059000, dateTime.toEpochMilliseconds())
         assertEquals(0, dateTime.zoneOffset.hours)
         assertEquals(0, dateTime.zoneOffset.minutes)
     }

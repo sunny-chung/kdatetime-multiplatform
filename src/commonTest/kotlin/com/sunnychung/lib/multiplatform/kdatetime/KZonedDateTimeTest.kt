@@ -56,4 +56,11 @@ class KZonedDateTimeTest {
         val dateTime = KZonedDateTime(year = 2024, month = 1, day = 20, hour = 13, minute = 42, second = 29, zoneOffset = KZoneOffset(-7, 0))
         assertEquals("2024-1-20 1:42:29 pm (-07:00)", dateTime.format("yyyy-M-d h:mm:ss aa (Z)"))
     }
+
+    @Test
+    fun toIso8601String() {
+        val zonedDateTime = KZonedDateTime(year = 2024, month = 3, day = 12, hour = 5, minute = 12, second = 3, millisecond = 999, zoneOffset = KZoneOffset(hours = 8, minutes = 0))
+        assertEquals("2024-03-12T05:12:03+08:00", zonedDateTime.toIso8601String())
+        assertEquals("2024-03-12T05:12:03.999+08:00", zonedDateTime.toIso8601StringWithMilliseconds())
+    }
 }

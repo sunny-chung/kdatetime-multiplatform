@@ -1,6 +1,6 @@
 package com.sunnychung.lib.multiplatform.kdatetime
 
-abstract class KPointOfTime : Comparable<KPointOfTime> {
+abstract class KPointOfTime : Comparable<KPointOfTime>, KDateTimeFormattable {
     abstract fun toEpochMilliseconds(): Long
 
     override fun compareTo(other: KPointOfTime): Int {
@@ -16,5 +16,13 @@ abstract class KPointOfTime : Comparable<KPointOfTime> {
 
     operator fun minus(other: KPointOfTime): KDuration {
         return KDuration(this.toEpochMilliseconds() - other.toEpochMilliseconds())
+    }
+
+    fun toIso8601String(): String {
+        return KDateTimeFormat.ISO8601_DATETIME.format(this)
+    }
+
+    fun toIso8601StringWithMilliseconds(): String {
+        return KDateTimeFormat.FULL.format(this)
     }
 }

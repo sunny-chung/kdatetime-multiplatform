@@ -41,4 +41,11 @@ class KInstantTest {
         val t2 = t1 - 12.seconds()
         assertEquals(1694404171789 - 12 * 1000, t2.toEpochMilliseconds())
     }
+
+    @Test
+    fun toIso8601String() {
+        val instant = KInstant(timestampMs = 1710212523_999)
+        assertEquals("2024-03-12T03:02:03Z", instant.toIso8601String())
+        assertEquals("2024-03-12T03:02:03.999Z", instant.toIso8601StringWithMilliseconds())
+    }
 }
