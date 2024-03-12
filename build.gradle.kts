@@ -52,10 +52,9 @@ kotlin {
         macosX64()
     )
     /*
-        Not using IR because its running time is slower than Legacy for 3X that could not pass the tests.
-        Will use IR when Kotlin is upgraded to 1.9 which using IR is forced and may fix the issue.
+        Note: Code compiled by IR has a running time slower than Legacy for 3X that could not pass the tests.
      */
-    js(LEGACY) {
+    js(BOTH) {
         browser {
             commonWebpackConfig {
                 cssSupport {
