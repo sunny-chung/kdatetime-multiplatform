@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "io.github.sunny-chung"
-version = "0.6.2"
+version = "0.6.3"
 
 val isGitHubActionsCICD = project.hasProperty("CICD") && project.property("CICD") == "GitHubActions"
 if (isGitHubActionsCICD) {
