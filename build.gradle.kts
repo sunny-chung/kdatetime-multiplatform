@@ -16,6 +16,11 @@ plugins {
 group = "io.github.sunny-chung"
 version = "0.6.2"
 
+val isGitHubActionsCICD = project.hasProperty("CICD") && project.property("CICD") == "GitHubActions"
+if (isGitHubActionsCICD) {
+    println("Running with GitHub Actions CI/CD")
+}
+
 repositories {
     mavenCentral()
     google()
@@ -63,14 +68,22 @@ kotlin {
             }
             testTask {
                 useMocha {
-                    timeout = "31s" // GitHub Actions Mac runners are significantly slower
+                    timeout = if (isGitHubActionsCICD) {
+                        "61s" // GitHub Actions Mac runners are significantly slower
+                    } else {
+                        "21s"
+                    }
                 }
             }
         }
         nodejs {
             testTask {
                 useMocha {
-                    timeout = "31s" // GitHub Actions Mac runners are significantly slower
+                    timeout = if (isGitHubActionsCICD) {
+                        "61s" // GitHub Actions Mac runners are significantly slower
+                    } else {
+                        "21s"
+                    }
                 }
             }
         }
