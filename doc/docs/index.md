@@ -15,7 +15,7 @@ title: Home
 ![watchOS](https://img.shields.io/badge/watchOS-blue)
 ![tvOS](https://img.shields.io/badge/tvOS-blue)
 
-KDateTime is a Kotlin Multiplatform library to provide **regular date-time functionality needed with very minimal platform dependencies**. It means upgrading OS / platform SDK target versions or moving to another platform would not break your application. Same and consistent core API set is provided to all JVM, Apple, JS targets.
+KDateTime is a Kotlin Multiplatform library to provide **regular date-time functionality needed with very minimal platform dependencies**. It means upgrading OS / platform SDK target versions or moving to another platform would not break your application. Same and consistent core API set is provided to all JVM, Apple, JS and native targets.
 
 Comparing with the kotlinx one, this library additionally provides formatting and parsing from custom formatted string. As it has extremely few dependencies, it is very lightweight. The sum of all the artifacts among all the platforms, including source jars and javadocs, is less than 700 KB.
 
