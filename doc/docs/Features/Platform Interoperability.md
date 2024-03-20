@@ -70,6 +70,11 @@ let iosDate: Date = instant.toNSDate()
 let instant2: KInstant = KDateTimeKt.KInstantFrom(date: iosDate)
 ```
 
+When working with native iOS, date time strings can omit seconds and/or milliseconds, but you don't know which format would be used at when. With KDateTime, no more pain when parsing these strings.
+```kotlin
+val zonedInstant = KZonedInstant.parseFrom(input = string, formats = KDateTimeFormat.IOS_DATE_FORMATS)
+```
+
 ## JavaScript / TypeScript
 
 There is a limited set of conversions between KDateTime and JS native APIs exposed from Kotlin side.

@@ -26,11 +26,14 @@ graph
     KZonedInstant <--KDateTimeFormat--> String
     KInstant --KDateTimeFormat--> String
     KDuration --KDateTimeFormat--> String
+    KDuration --add/subtract KDuration--> KDuration
     KZonedInstant --subtract KZonedInstant--> KDuration
     KInstant --subtract KInstant--> KDuration
     Int/Long <--> KDuration
     KInstant --add/subtract KDuration--> KInstant
     KZonedInstant --add/subtract KDuration--> KZonedInstant
+    KZonedDateTime --subtract KZonedDateTime--> KDuration
+    KZonedDateTime --KDateTimeFormat--> String
 ```
 
 Unlike Java, there is no local date or local datetime class here. That creates lots of usage issues. `KZonedInstant` or `KZonedDateTime` can be used instead.
@@ -96,6 +99,12 @@ There are many ways to create a `KDuration`.
 val duration1: KDuration = 95.seconds()
 val duration2: KDuration = KDuration.of(95, KFixedTimeUnit.Second)
 val duration3: KDuration = KInstant(1694618242720) - KInstant(1694618242700) // 20 ms
+```
+
+Convert to other time units.
+```kotlin
+val minutes: Long = duration1.toMinutes()
+val ms: Long = duration1.toMilliseconds()
 ```
 
 ## Calendar Date Time -- `KZonedDateTime`
