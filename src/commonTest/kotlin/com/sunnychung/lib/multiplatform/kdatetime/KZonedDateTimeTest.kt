@@ -2,6 +2,7 @@ package com.sunnychung.lib.multiplatform.kdatetime
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class KZonedDateTimeTest {
 
@@ -38,17 +39,25 @@ class KZonedDateTimeTest {
     }
 
     @Test
-    fun plus() {
+    fun plusDuration() {
         val dateTime1 = KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0)).toKZonedDateTime()
         val dateTime2 = dateTime1 + KDuration.of(2, KFixedTimeUnit.Hour)
         assertEquals(1694409632_999 + 2 * 60 * 60 * 1000, dateTime2.toKZonedInstant().toEpochMilliseconds())
     }
 
     @Test
-    fun minus() {
+    fun minusDuration() {
         val dateTime1 = KZonedInstant(timestampMs = 1694409632_999, zoneOffset = KZoneOffset(hours = 8, minutes = 0)).toKZonedDateTime()
         val dateTime2 = dateTime1 - KDuration.of(3, KFixedTimeUnit.Hour)
         assertEquals(1694409632_999 - 3 * 60 * 60 * 1000, dateTime2.toKZonedInstant().toEpochMilliseconds())
+    }
+
+    @Test
+    fun minusDateTime() {
+        val dateTime1 = KZonedDateTime(year = 2024, month = 1, day = 20, hour = 13, minute = 42, second = 29, zoneOffset = KZoneOffset(-7, 0))
+        val dateTime2 = KZonedDateTime(year = 2024, month = 1, day = 20, hour = 13, minute = 42, second = 27, millisecond = 600, zoneOffset = KZoneOffset(-7, 0))
+        assertTrue { (dateTime1 - dateTime2) is KDuration }
+        assertEquals(1400, (dateTime1 - dateTime2).toMilliseconds())
     }
 
     @Test

@@ -24,6 +24,9 @@ class KZonedDateTime(
 
     private val calendar = KGregorianCalendar
 
+    /**
+     * Converts to a Zoned Instant using the Gregorian Calendar.
+     */
     fun toKZonedInstant(): KZonedInstant {
         return calendar.kZonedInstantFromLocalDate(
             year = year,
@@ -37,6 +40,9 @@ class KZonedDateTime(
         )
     }
 
+    /**
+     * Converts to a Zoned Instant using the Gregorian Calendar, and then drops the zone offset.
+     */
     inline fun toKInstant(): KInstant {
         return toKZonedInstant().dropZoneOffset()
     }
@@ -69,6 +75,9 @@ class KZonedDateTime(
         )
     }
 
+    /**
+     * Format the date time to a String using the Gregorian Calendar.
+     */
     fun format(pattern: String) = KDateTimeFormat(pattern).format(toKZonedInstant())
 
     override fun toString(): String {
@@ -83,12 +92,25 @@ class KZonedDateTime(
         return KDateTimeFormat.FULL.format(toKZonedInstant())
     }
 
+    /**
+     * This assumes the Gregorian Calendar is being used all the time.
+     */
     operator fun plus(duration: KDuration): KZonedDateTime {
         return (toKZonedInstant() + duration).toKZonedDateTime()
     }
 
+    /**
+     * This assumes the Gregorian Calendar is being used all the time.
+     */
     operator fun minus(duration: KDuration): KZonedDateTime {
         return (toKZonedInstant() - duration).toKZonedDateTime()
+    }
+
+    /**
+     * This assumes the Gregorian Calendar is being used all the time.
+     */
+    operator fun minus(dateTime: KZonedDateTime): KDuration {
+        return toKZonedInstant() - dateTime.toKZonedInstant()
     }
 }
 
