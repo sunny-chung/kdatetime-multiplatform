@@ -22,6 +22,10 @@ open class KDuration internal constructor(val millis: Long) : KDateTimeFormattab
         return KDuration(millis + other.millis)
     }
 
+    operator fun minus(other: KDuration): KDuration {
+        return KDuration(millis - other.millis)
+    }
+
     override fun compareTo(other: KDuration): Int {
         return toMilliseconds().compareTo(other.toMilliseconds())
     }

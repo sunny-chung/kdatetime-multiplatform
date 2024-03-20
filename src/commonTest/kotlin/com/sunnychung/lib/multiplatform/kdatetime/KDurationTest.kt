@@ -31,7 +31,7 @@ class KDurationTest {
 
     @Test
     fun shorthandConversions() {
-        val duration = 2.hours() + 11.minutes() + 6.seconds()
-        assertEquals(2 * 3600 + 11 * 60 + 6, duration.toSeconds())
+        val duration = 2.hours() + 11.minutes() + 6.seconds() - 7.seconds()
+        assertEquals(2 * 3600 + 11 * 60 + 6 - 7, duration.toSeconds())
     }
 }
