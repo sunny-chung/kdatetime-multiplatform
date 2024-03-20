@@ -44,9 +44,9 @@ import shared
 
 Note the framework base name `shared` is customizable.
 
-## For Native Targets
+## Build Manually
 
-Only macOS native target was built and published to Maven Central. For other OS targets (Linux and Windows), they are also supported, but you would have to clone the source code and build manually. It is not difficult.
+Kotlin Multiplatform builds artifacts targeting different OSes according to the machine OS where the build process takes place.
 
 In the target OS,
 
