@@ -35,6 +35,18 @@ class KDateTimeFormat(val pattern: String) {
             field = value.toList()
         }
 
+    var ampmNamesCaps = AMPM_NAMES_CAPS
+        set(value) {
+            if (value.size != 2) throw IllegalArgumentException("`ampmNamesCaps` must be a list of 2 string elements")
+            field = value.toList()
+        }
+
+    var ampmNames = AMPM_NAMES
+        set(value) {
+            if (value.size != 2) throw IllegalArgumentException("`ampmNames` must be a list of 2 string elements")
+            field = value.toList()
+        }
+
     enum class FormatTokenType(val hasLengthLimit: Boolean = true, val allowedLengths: List<Int> = listOf()) {
         Literial(hasLengthLimit = false),
         Year(allowedLengths = listOf(2, 4)),
@@ -151,8 +163,8 @@ class KDateTimeFormat(val pattern: String) {
                 FormatTokenType.Minute -> s.append(localDateTime.minutePart().toString().padStart(it.length, '0'))
                 FormatTokenType.Second -> s.append(localDateTime.secondPart().toString().padStart(it.length, '0'))
                 FormatTokenType.Millisecond -> s.append(localDateTime.millisecondPart().toString().padStart(3, '0').trimEnd('0').padEnd(it.length, '0'))
-                FormatTokenType.ampm -> s.append(if (localDateTime.hourPart() < 12) "am" else "pm")
-                FormatTokenType.AMPM -> s.append(if (localDateTime.hourPart() < 12) "AM" else "PM")
+                FormatTokenType.ampm -> s.append(ampmNames[if (localDateTime.hourPart() < 12) 0 else 1])
+                FormatTokenType.AMPM -> s.append(ampmNamesCaps[if (localDateTime.hourPart() < 12) 0 else 1])
                 FormatTokenType.DayOfWeekNumber -> s.append(localDate.dayOfWeek())
                 FormatTokenType.DayOfWeek -> s.append(weekDayNames[localDate.dayOfWeek()])
                 FormatTokenType.TimeZoneOffsetOrZ -> when (datetime) {
@@ -198,8 +210,10 @@ class KDateTimeFormat(val pattern: String) {
 
     protected fun parseAmPm(input: String): Int {
         return when (input.lowercase()) {
-            "am" -> AM
-            "pm" -> PM
+            AMPM_NAMES_CAPS[0] -> AM
+            AMPM_NAMES_CAPS[1] -> PM
+            AMPM_NAMES[0] -> AM
+            AMPM_NAMES[1] -> PM
             else -> throw ParseDateTimeException()
         }
     }
@@ -322,6 +336,8 @@ class KDateTimeFormat(val pattern: String) {
         val IOS_DATE_FORMATS = listOf(FULL, ISO8601_DATETIME, KDateTimeFormat("yyyy-MM-dd'T'HH:mmZ"))
 
         val WEEKDAY_NAMES = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+        val AMPM_NAMES_CAPS = listOf("AM", "PM")
+        val AMPM_NAMES = listOf("am", "pm")
 
         internal val PARSER_COMPULSORY_INPUT_TYPES = setOf(
             FormatTokenType.Year,
