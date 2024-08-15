@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class xKDateTimeFormatTest {
+class KDateTimeFormatTest {
     @Test
     fun formatInstant() {
         val dateTime = KInstant(1694400859230) // Monday, September 11, 2023 2:54:19.230 AM

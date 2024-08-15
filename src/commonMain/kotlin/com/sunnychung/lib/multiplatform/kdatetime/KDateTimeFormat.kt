@@ -209,9 +209,7 @@ class KDateTimeFormat(val pattern: String) {
     }
 
     protected fun parseAmPm(input: String): Int {
-        return when (input) {
-            AMPM_NAMES_CAPS[0] -> AM
-            AMPM_NAMES_CAPS[1] -> PM
+        return when (input.lowercase()) {
             AMPM_NAMES[0] -> AM
             AMPM_NAMES[1] -> PM
             else -> throw ParseDateTimeException()
