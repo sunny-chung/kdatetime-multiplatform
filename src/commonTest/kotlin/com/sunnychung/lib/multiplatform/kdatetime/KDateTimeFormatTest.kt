@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class KDateTimeFormatTest {
+class xKDateTimeFormatTest {
     @Test
     fun formatInstant() {
         val dateTime = KInstant(1694400859230) // Monday, September 11, 2023 2:54:19.230 AM
@@ -158,5 +158,22 @@ class KDateTimeFormatTest {
         assertEquals("Fri", formatter.format(dateTime))
         formatter.weekDayNames = listOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
         assertEquals("星期五", formatter.format(dateTime))
+    }
+
+    @Test
+    fun formatAmPm() {
+        val dateTime = KInstant(1723698748231) // Thursday, August 15, 2024 5:12:28 AM GMT
+        assertEquals("am", dateTime.format("aa"))
+        assertEquals("AM", dateTime.format("AA"))
+        val dateTime2 = KInstant(1723582800000) // Tuesday, August 13, 2024 9:00:00 PM GMT
+        assertEquals("pm", dateTime2.format("aa"))
+        assertEquals("PM", dateTime2.format("AA"))
+
+        val formatter = KDateTimeFormat("aa AA")
+        formatter.ampmNames = listOf("上午", "下午")
+        formatter.ampmNamesCaps = listOf("오전", "오후")
+
+        assertEquals("上午 오전", formatter.format(dateTime))
+        assertEquals("下午 오후", formatter.format(dateTime2))
     }
 }
