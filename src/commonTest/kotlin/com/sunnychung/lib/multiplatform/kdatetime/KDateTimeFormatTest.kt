@@ -80,7 +80,7 @@ class KDateTimeFormatTest {
             assertEquals(0, dateTime.zoneOffset.minutes)
         }
 
-        KDateTimeFormat("yy-MM-dd hh:mm:ssaaZ").apply { setAmPmLowercaseNames("오전", "오후") }.parseToKZonedDateTime("23-09-11 02:54:19오후UTC").toKZonedInstant().let { dateTime ->
+        KDateTimeFormat("yy-MM-dd hh:mm:ssaaZ").apply { setAmPmNames("오전", "오후") }.parseToKZonedDateTime("23-09-11 02:54:19오후UTC").toKZonedInstant().let { dateTime ->
             assertEquals(1694444059000, dateTime.toMilliseconds())
             assertEquals(0, dateTime.zoneOffset.hours)
             assertEquals(0, dateTime.zoneOffset.minutes)
@@ -176,17 +176,17 @@ class KDateTimeFormatTest {
         assertEquals("PM", dateTime2.format("AA"))
 
         val formatter = KDateTimeFormat("aa AA")
-        formatter.setAmPmLowercaseNames("a.m.", "p.m.")
+        formatter.setAmPmNames("a.m.", "p.m.")
         assertEquals("a.m. A.M.", formatter.format(dateTime))
         assertEquals("p.m. P.M.", formatter.format(dateTime2))
 
         val formatter2 = KDateTimeFormat("aa AA")
-        formatter2.setAmPmUppercaseNames("U.V.", "N.V.")
-        assertEquals("u.v. U.V.", formatter2.format(dateTime))
-        assertEquals("n.v. N.V.", formatter2.format(dateTime2))
+        formatter2.setAmPmNames("u.v.", "n.v.", "K.A.", "K.P.")
+        assertEquals("u.v. K.A.", formatter2.format(dateTime))
+        assertEquals("n.v. K.P.", formatter2.format(dateTime2))
 
         val formatter3 = KDateTimeFormat("AA aa")
-        formatter3.setAmPmUppercaseNames("오전", "오후")
+        formatter3.setAmPmNames("오전", "오후")
         assertEquals("오전 오전", formatter3.format(dateTime))
         assertEquals("오후 오후", formatter3.format(dateTime2))
 

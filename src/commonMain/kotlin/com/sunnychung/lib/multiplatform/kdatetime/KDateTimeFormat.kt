@@ -39,17 +39,7 @@ class KDateTimeFormat(val pattern: String) {
 
     protected var ampmLowercaseNames = AMPM_LOWERCASE_NAMES
 
-    fun setAmPmLowercaseNames(am: String, pm: String) {
-        ampmLowercaseNames = listOf(am, pm)
-        ampmUppercaseNames = listOf(am.uppercase(), pm.uppercase())
-    }
-
-    fun setAmPmUppercaseNames(am: String, pm: String) {
-        ampmUppercaseNames = listOf(am, pm)
-        ampmLowercaseNames = listOf(am.lowercase(), pm.lowercase())
-    }
-
-    fun setAmPmNames(amLowercase: String, pmLowercase: String, amUppercase: String, pmUppercase: String) {
+    fun setAmPmNames(amLowercase: String, pmLowercase: String, amUppercase: String = amLowercase.uppercase(), pmUppercase: String = pmLowercase.uppercase()) {
         ampmLowercaseNames = listOf(amLowercase, pmLowercase)
         ampmUppercaseNames = listOf(amUppercase, pmUppercase)
     }
