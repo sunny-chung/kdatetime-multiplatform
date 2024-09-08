@@ -54,8 +54,8 @@ class KDateTimeFormat(val pattern: String) {
         Minute(allowedLengths = listOf(1, 2)),
         Second(allowedLengths = listOf(1, 2)),
         Millisecond(allowedLengths = listOf(1, 2, 3)),
-        ampm(allowedLengths = listOf(2)),
-        AMPM(allowedLengths = listOf(2)),
+        ampm(hasLengthLimit = false),
+        AMPM(hasLengthLimit = false),
         DayOfWeekNumber(allowedLengths = listOf(1)),
         DayOfWeek(allowedLengths = listOf(1)),
         TimeZoneOffsetOrZ(allowedLengths = listOf(1)),
@@ -81,6 +81,8 @@ class KDateTimeFormat(val pattern: String) {
                 }
                 val token = if (prevType == FormatTokenType.Literial) {
                     FormatToken(type = prevType, length = literal.length, literal = literal.toString())
+                } else if (prevType == FormatTokenType.AMPM || prevType == FormatTokenType.ampm) {
+                    FormatToken(type = prevType, length = literal.length)
                 } else {
                     FormatToken(type = prevType, length = length)
                 }
@@ -126,6 +128,9 @@ class KDateTimeFormat(val pattern: String) {
                 length = 1
             }
             if (!ignoreCurrentChar && type == FormatTokenType.Literial) {
+                literal.append(it)
+            }
+            if (type == FormatTokenType.ampm || type == FormatTokenType.AMPM) {
                 literal.append(it)
             }
         }
@@ -206,7 +211,7 @@ class KDateTimeFormat(val pattern: String) {
     }
 
     protected fun parseAmPmLowercase(input: String): Int {
-        return when (input.lowercase()) {
+        return when (input) {
             ampmLowercaseNames[0] -> AM
             ampmLowercaseNames[1] -> PM
             else -> throw ParseDateTimeException()
@@ -214,7 +219,7 @@ class KDateTimeFormat(val pattern: String) {
     }
 
     protected fun parseAmPmUppercase(input: String): Int {
-        return when (input.uppercase()) {
+        return when (input) {
             ampmUppercaseNames[0] -> AM
             ampmUppercaseNames[1] -> PM
             else -> throw ParseDateTimeException()

@@ -18,4 +18,6 @@ data class KDate(val year: Int, val month: Int, val day: Int) : AndroidParcelabl
             throw e
         }
     }
+
+    companion object
 }
