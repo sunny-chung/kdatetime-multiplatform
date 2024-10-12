@@ -2,13 +2,13 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 plugins {
-    kotlin("multiplatform") version "1.8.21"
+    kotlin("multiplatform") version "1.9.25"
 
     // using a compatible version with IntelliJ IDEA Android plugin, so that the "androidMain" sourceset can be recognized
     id("com.android.library") version "8.0.2"
 
-    kotlin("plugin.serialization") version "1.8.21"
-    kotlin("plugin.parcelize") version "1.8.21"
+    kotlin("plugin.serialization") version "1.9.25"
+    kotlin("plugin.parcelize") version "1.9.25"
     id("maven-publish")
     id("sunnychung.publication")
 }
@@ -59,7 +59,7 @@ kotlin {
     /*
         Note: Code compiled by IR has a running time slower than Legacy for 3X that could not pass the tests.
      */
-    js(BOTH) {
+    js(IR) {
         browser {
             commonWebpackConfig {
                 cssSupport {

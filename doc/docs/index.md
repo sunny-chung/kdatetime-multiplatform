@@ -24,7 +24,7 @@ This library is going to be stable. Tests are executed against every push in the
 ## Supported Platforms
 - Android
 - Non-Android JVM
-- JS (Legacy compiler + IR compiler)
+- JS (IR compiler only)
 - iOS
 - macOS
 - watchOS
