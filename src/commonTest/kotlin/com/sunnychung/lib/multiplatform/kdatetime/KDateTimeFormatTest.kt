@@ -95,11 +95,45 @@ class KDateTimeFormatTest {
 //            assertEquals(0, dateTime.zoneOffset.minutes)
 //        }
 
-        KDateTimeFormat("yy-MM-dd hh:mm:ss AAAA aaaa Z").apply { setAmPmNames("a.m.", "p.m.") }.parseToKZonedDateTime("23-09-11 02:54:19 P.M. p.m. UTC").toKZonedInstant().let { dateTime ->
-            assertEquals(1694444059000, dateTime.toMilliseconds())
-            assertEquals(0, dateTime.zoneOffset.hours)
-            assertEquals(0, dateTime.zoneOffset.minutes)
-        }
+        KDateTimeFormat("yy-MM-dd hh:mm:ss AAAA Z")
+            .apply { setAmPmNames("a.m.", "p.m.") }
+            .parseToKZonedDateTime("23-09-11 02:54:19 P.M. UTC")
+            .toKZonedInstant()
+            .let { dateTime ->
+                assertEquals(1694444059000, dateTime.toMilliseconds())
+                assertEquals(0, dateTime.zoneOffset.hours)
+                assertEquals(0, dateTime.zoneOffset.minutes)
+            }
+
+        KDateTimeFormat("yy-MM-dd hh:mm:ss AAAAAAAAAA Z")
+            .apply { setAmPmNames("a.m.", "p.m.") }
+            .parseToKZonedDateTime("23-09-11 02:54:19 P.M. UTC")
+            .toKZonedInstant()
+            .let { dateTime ->
+                assertEquals(1694444059000, dateTime.toMilliseconds())
+                assertEquals(0, dateTime.zoneOffset.hours)
+                assertEquals(0, dateTime.zoneOffset.minutes)
+            }
+
+        KDateTimeFormat("yy-MM-dd hh:mm:ss AAAAAAAAAA Z")
+            .apply { setAmPmNames("a.m.", "p.m.") }
+            .parseToKZonedDateTime("23-09-11 02:54:19 P.M. -01:00")
+            .toKZonedInstant()
+            .let { dateTime ->
+                assertEquals(1694447659000, dateTime.toMilliseconds())
+                assertEquals(-1, dateTime.zoneOffset.hours)
+                assertEquals(0, dateTime.zoneOffset.minutes)
+            }
+
+        KDateTimeFormat("yy-MM-dd hh:mm:ss AA Z")
+            .apply { setAmPmNames("a.m.", "p.m.") }
+            .parseToKZonedDateTime("23-09-11 02:54:19 P.M. -01:00")
+            .toKZonedInstant()
+            .let { dateTime ->
+                assertEquals(1694447659000, dateTime.toMilliseconds())
+                assertEquals(-1, dateTime.zoneOffset.hours)
+                assertEquals(0, dateTime.zoneOffset.minutes)
+            }
     }
 
     @Test
@@ -217,14 +251,19 @@ class KDateTimeFormatTest {
         val timeStr = "2023-04-30T11:00:00.000+08:00am"
         assertEquals(1682823600000, formatter.parseToKZonedDateTime(timeStr).toKInstant().toMilliseconds())
 
-        val formatter2 = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZaaaa")
+        val formatter2 = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZa")
         formatter2.setAmPmNames("a.m.", "p.m.")
         val timeStr2 = "2023-04-30T11:00:00.000+08:00a.m."
         assertEquals(1682823600000, formatter2.parseToKZonedDateTime(timeStr2).toKInstant().toMilliseconds())
 
-        val formatter3 = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZAAAA")
+        val formatter3 = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZAAA")
         formatter3.setAmPmNames("a.m.", "p.m.")
         val timeStr3 = "2023-04-30T11:00:00.000+08:00A.M."
         assertEquals(1682823600000, formatter3.parseToKZonedDateTime(timeStr3).toKInstant().toMilliseconds())
+
+        val formatter4 = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZAAA")
+        formatter4.setAmPmNames("a.m.", "p.m.", "AM", "PM")
+        val timeStr4 = "2023-04-30T11:00:00.000+08:00PM"
+        assertEquals(1682866800000, formatter4.parseToKZonedDateTime(timeStr4).toKInstant().toMilliseconds())
     }
 }

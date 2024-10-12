@@ -44,7 +44,7 @@ class KDateTimeFormat(val pattern: String) {
         ampmUppercaseNames = listOf(amUppercase, pmUppercase)
     }
 
-    enum class FormatTokenType(val hasLengthLimit: Boolean = true, val allowedLengths: List<Int> = listOf()) {
+    enum class FormatTokenType(val hasLengthLimit: Boolean = true, val allowedLengths: List<Int> = listOf(), val hasDynamicLength: Boolean = false) {
         Literial(hasLengthLimit = false),
         Year(allowedLengths = listOf(2, 4)),
         Month(allowedLengths = listOf(1, 2)),
@@ -54,8 +54,8 @@ class KDateTimeFormat(val pattern: String) {
         Minute(allowedLengths = listOf(1, 2)),
         Second(allowedLengths = listOf(1, 2)),
         Millisecond(allowedLengths = listOf(1, 2, 3)),
-        ampm(hasLengthLimit = false),
-        AMPM(hasLengthLimit = false),
+        ampm(hasLengthLimit = false, hasDynamicLength = true),
+        AMPM(hasLengthLimit = false, hasDynamicLength = true),
         DayOfWeekNumber(allowedLengths = listOf(1)),
         DayOfWeek(allowedLengths = listOf(1)),
         TimeZoneOffsetOrZ(allowedLengths = listOf(1)),
@@ -210,18 +210,18 @@ class KDateTimeFormat(val pattern: String) {
         }
     }
 
-    protected fun parseAmPmLowercase(input: String): Int {
-        return when (input) {
-            ampmLowercaseNames[0] -> AM
-            ampmLowercaseNames[1] -> PM
+    protected fun parseAmPmLowercase(input: String): DynamicLengthParseResult<Int> {
+        return when {
+            input.startsWith(ampmLowercaseNames[0]) -> DynamicLengthParseResult(AM, length = ampmLowercaseNames[0].length)
+            input.startsWith(ampmLowercaseNames[1]) -> DynamicLengthParseResult(PM, length = ampmLowercaseNames[1].length)
             else -> throw ParseDateTimeException()
         }
     }
 
-    protected fun parseAmPmUppercase(input: String): Int {
-        return when (input) {
-            ampmUppercaseNames[0] -> AM
-            ampmUppercaseNames[1] -> PM
+    protected fun parseAmPmUppercase(input: String): DynamicLengthParseResult<Int> {
+        return when {
+            input.startsWith(ampmUppercaseNames[0]) -> DynamicLengthParseResult(AM, length = ampmUppercaseNames[0].length)
+            input.startsWith(ampmUppercaseNames[1]) -> DynamicLengthParseResult(PM, length = ampmUppercaseNames[1].length)
             else -> throw ParseDateTimeException()
         }
     }
@@ -241,7 +241,11 @@ class KDateTimeFormat(val pattern: String) {
 
         var startIndex = 0
         tokens.forEach { token ->
-            val inputSubstring = input.substring(startIndex, startIndex + token.length)
+            val inputSubstring = if (token.type.hasDynamicLength) {
+                input.substring(startIndex)
+            } else {
+                input.substring(startIndex, startIndex + token.length)
+            }
             var length = token.length
             if (token.type == FormatTokenType.Literial) {
                 if (inputSubstring != token.literal!!) {
@@ -267,8 +271,15 @@ class KDateTimeFormat(val pattern: String) {
                     FormatTokenType.Minute -> minute = inputSubstring.toInt()
                     FormatTokenType.Second -> second = inputSubstring.toInt()
                     FormatTokenType.Millisecond -> millisecond = inputSubstring.toInt()
-                    FormatTokenType.ampm -> amPm = parseAmPmLowercase(inputSubstring)
-                    FormatTokenType.AMPM -> amPm = parseAmPmUppercase(inputSubstring)
+                    FormatTokenType.ampm, FormatTokenType.AMPM -> {
+                        val result = when (token.type) {
+                            FormatTokenType.ampm -> parseAmPmLowercase(inputSubstring)
+                            FormatTokenType.AMPM -> parseAmPmUppercase(inputSubstring)
+                            else -> throw IllegalStateException()
+                        }
+                        amPm = result.value
+                        length = result.length
+                    }
                     FormatTokenType.TimeZoneOffsetOrZ -> {
                         val longerSubstring = input.substring(startIndex)
                         length = if (longerSubstring.startsWith("Z")) {
@@ -359,4 +370,6 @@ class KDateTimeFormat(val pattern: String) {
         private val AM = 0
         private val PM = 1
     }
+
+    protected data class DynamicLengthParseResult<T>(val value: T, val length: Int)
 }
