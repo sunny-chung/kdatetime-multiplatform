@@ -59,7 +59,7 @@ kotlin {
     /*
         Note: Code compiled by IR has a running time slower than Legacy for 3X that could not pass the tests.
      */
-    js(BOTH) {
+    js(IR) {
         browser {
             commonWebpackConfig {
                 cssSupport {

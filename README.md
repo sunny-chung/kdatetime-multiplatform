@@ -34,7 +34,7 @@ Read the [documentation website](https://sunny-chung.github.io/kdatetime-multipl
 # Supported Platforms
 - Android (Tested against compileSdk = 33, 34)
 - Non-Android JVM (macOS tested against 14.0 beta, Java 17; Windows and Linux untested)
-- JS (Legacy compiler + IR compiler)
+- JS (IR compiler only)
 - iOS (Tested against 16.4)
 - macOS Native (Tested against 14.0 beta)
 - watchOS (Tested against 10.0 beta)
