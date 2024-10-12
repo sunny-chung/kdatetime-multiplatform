@@ -77,6 +77,14 @@ formatter.weekDayNames = listOf("星期日", "星期一", "星期二", "星期�
 println(formatter.format(dateTime)) // 星期五
 ```
 
+### Formatting Localized AM/PM
+```kotlin
+val dateTime = KInstant(1723698748231) // Thursday, August 15, 2024 5:12:28 AM GMT
+val formatter3 = KDateTimeFormat("AA aa")
+formatter3.setAmPmNames("오전", "오후")
+println(formatter3.format(dateTime)) // 오전 오전
+```
+
 ### Parsing from Strings
 
 Parse from ISO 8601 format without milliseconds
@@ -139,7 +147,14 @@ val time: KZonedInstant = KZonedInstant.parseFrom(
         KDateTimeFormat("yy-MM-dd hh:mm:ssaa Z"),
     )
 )
+```
 
+Parse localized AM/PM
+```kotlin
+val time: KZonedInstant = KDateTimeFormat("yy-MM-dd hh:mm:ss A Z")
+            .apply { setAmPmNames("a.m.", "p.m.") }
+            .parseToKZonedDateTime("23-09-11 02:54:19 P.M. -01:00")
+            .toKZonedInstant()
 ```
 
 ## Optimizing for Performance

@@ -28,7 +28,7 @@ repositories {
 
 kotlin {
     jvm {
-        jvmToolchain(8)
+        jvmToolchain(17)
 //        withJava() // not compatible with Android Gradle plugin
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
