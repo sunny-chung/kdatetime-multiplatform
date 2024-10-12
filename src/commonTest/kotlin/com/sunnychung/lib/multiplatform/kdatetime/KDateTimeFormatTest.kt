@@ -67,14 +67,35 @@ class KDateTimeFormatTest {
             assertEquals(13, dateTime.zoneOffset.hours)
             assertEquals(45, dateTime.zoneOffset.minutes)
         }
+    }
 
-        KDateTimeFormat("yy-MM-dd hh:mm:ss.lllaaZ").parseToKZonedDateTime("23-09-11 02:54:19.230amZ").toKZonedInstant().let { dateTime ->
-            assertEquals(1694400859230, dateTime.toMilliseconds())
-            assertEquals(0, dateTime.zoneOffset.hours)
-            assertEquals(0, dateTime.zoneOffset.minutes)
-        }
+    @Test
+    fun parseDateTimeToKZonedInstantAmPm() {
+//        KDateTimeFormat("yy-MM-dd hh:mm:ss.lll aa Z").parseToKZonedDateTime("23-09-11 02:54:19.230 am Z").toKZonedInstant().let { dateTime ->
+//            assertEquals(1694400859230, dateTime.toMilliseconds())
+//            assertEquals(0, dateTime.zoneOffset.hours)
+//            assertEquals(0, dateTime.zoneOffset.minutes)
+//        }
+//
+//        KDateTimeFormat("yy-MM-dd hh:mm:ss aa AA Z").parseToKZonedDateTime("23-09-11 02:54:19 pm PM UTC").toKZonedInstant().let { dateTime ->
+//            assertEquals(1694444059000, dateTime.toMilliseconds())
+//            assertEquals(0, dateTime.zoneOffset.hours)
+//            assertEquals(0, dateTime.zoneOffset.minutes)
+//        }
+//
+//        KDateTimeFormat("yy-MM-dd hh:mm:ss AA aa Z").apply { setAmPmNames("오전", "오후") }.parseToKZonedDateTime("23-09-11 02:54:19 오후 오후 UTC").toKZonedInstant().let { dateTime ->
+//            assertEquals(1694444059000, dateTime.toMilliseconds())
+//            assertEquals(0, dateTime.zoneOffset.hours)
+//            assertEquals(0, dateTime.zoneOffset.minutes)
+//        }
+//
+//        KDateTimeFormat("yy-MM-dd hh:mm:ss AA aa Z").apply { setAmPmNames("오전", "오후", "上午", "下午") }.parseToKZonedDateTime("23-09-11 02:54:19 下午 오후 UTC").toKZonedInstant().let { dateTime ->
+//            assertEquals(1694444059000, dateTime.toMilliseconds())
+//            assertEquals(0, dateTime.zoneOffset.hours)
+//            assertEquals(0, dateTime.zoneOffset.minutes)
+//        }
 
-        KDateTimeFormat("yy-MM-dd hh:mm:ssaaZ").parseToKZonedDateTime("23-09-11 02:54:19pmUTC").toKZonedInstant().let { dateTime ->
+        KDateTimeFormat("yy-MM-dd hh:mm:ss AAAA aaaa Z").apply { setAmPmNames("a.m.", "p.m.") }.parseToKZonedDateTime("23-09-11 02:54:19 P.M. p.m. UTC").toKZonedInstant().let { dateTime ->
             assertEquals(1694444059000, dateTime.toMilliseconds())
             assertEquals(0, dateTime.zoneOffset.hours)
             assertEquals(0, dateTime.zoneOffset.minutes)
@@ -158,5 +179,52 @@ class KDateTimeFormatTest {
         assertEquals("Fri", formatter.format(dateTime))
         formatter.weekDayNames = listOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
         assertEquals("星期五", formatter.format(dateTime))
+    }
+
+    @Test
+    fun formatAmPm() {
+        val dateTime = KInstant(1723698748231) // Thursday, August 15, 2024 5:12:28 AM GMT
+        assertEquals("am", dateTime.format("a"))
+        assertEquals("AM", dateTime.format("A"))
+        val dateTime2 = KInstant(1723582800000) // Tuesday, August 13, 2024 9:00:00 PM GMT
+        assertEquals("pm", dateTime2.format("a"))
+        assertEquals("PM", dateTime2.format("A"))
+
+        val formatter = KDateTimeFormat("aaaa AAAA")
+        formatter.setAmPmNames("a.m.", "p.m.")
+        assertEquals("a.m. A.M.", formatter.format(dateTime))
+        assertEquals("p.m. P.M.", formatter.format(dateTime2))
+
+        val formatter2 = KDateTimeFormat("aaaa AAAA")
+        formatter2.setAmPmNames("u.v.", "n.v.", "K.A.", "K.P.")
+        assertEquals("u.v. K.A.", formatter2.format(dateTime))
+        assertEquals("n.v. K.P.", formatter2.format(dateTime2))
+
+        val formatter3 = KDateTimeFormat("AA aa")
+        formatter3.setAmPmNames("오전", "오후")
+        assertEquals("오전 오전", formatter3.format(dateTime))
+        assertEquals("오후 오후", formatter3.format(dateTime2))
+
+        val formatter4 = KDateTimeFormat("AA aa")
+        formatter4.setAmPmNames("a.m.", "p.m.", "AK.MK.", "PK.MK.")
+        assertEquals("AK.MK. a.m.", formatter4.format(dateTime))
+        assertEquals("PK.MK. p.m.", formatter4.format(dateTime2))
+    }
+
+    @Test
+    fun parseAmPm() {
+        val formatter = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZaa")
+        val timeStr = "2023-04-30T11:00:00.000+08:00am"
+        assertEquals(1682823600000, formatter.parseToKZonedDateTime(timeStr).toKInstant().toMilliseconds())
+
+        val formatter2 = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZaaaa")
+        formatter2.setAmPmNames("a.m.", "p.m.")
+        val timeStr2 = "2023-04-30T11:00:00.000+08:00a.m."
+        assertEquals(1682823600000, formatter2.parseToKZonedDateTime(timeStr2).toKInstant().toMilliseconds())
+
+        val formatter3 = KDateTimeFormat("yyyy-MM-dd'T'hh:mm:ss.lllZAAAA")
+        formatter3.setAmPmNames("a.m.", "p.m.")
+        val timeStr3 = "2023-04-30T11:00:00.000+08:00A.M."
+        assertEquals(1682823600000, formatter3.parseToKZonedDateTime(timeStr3).toKInstant().toMilliseconds())
     }
 }

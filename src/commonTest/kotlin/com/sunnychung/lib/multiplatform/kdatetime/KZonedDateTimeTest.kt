@@ -63,7 +63,27 @@ class KZonedDateTimeTest {
     @Test
     fun format() {
         val dateTime = KZonedDateTime(year = 2024, month = 1, day = 20, hour = 13, minute = 42, second = 29, zoneOffset = KZoneOffset(-7, 0))
+        val dateTime2 = KZonedDateTime(year = 2024, month = 1, day = 20, hour = 8, minute = 42, second = 29, zoneOffset = KZoneOffset(-7, 0))
         assertEquals("2024-1-20 1:42:29 pm (-07:00)", dateTime.format("yyyy-M-d h:mm:ss aa (Z)"))
+        val formatter = KDateTimeFormat("yyyy-M-d h:mm:ss aa AA (Z)")
+        formatter.setAmPmNames("a.m.", "p.m.")
+        assertEquals("2024-1-20 1:42:29 p.m. P.M. (-07:00)", formatter.format(dateTime.toKZonedInstant()))
+        assertEquals("2024-1-20 8:42:29 a.m. A.M. (-07:00)", formatter.format(dateTime2.toKZonedInstant()))
+
+        val formatter2 = KDateTimeFormat("yyyy-M-d h:mm:ss aa AA (Z)")
+        formatter2.setAmPmNames("u.v.", "n.v.")
+        assertEquals("2024-1-20 1:42:29 n.v. N.V. (-07:00)", formatter2.format(dateTime.toKZonedInstant()))
+        assertEquals("2024-1-20 8:42:29 u.v. U.V. (-07:00)", formatter2.format(dateTime2.toKZonedInstant()))
+
+        val formatter3 = KDateTimeFormat("yyyy-M-d h:mm:ss aa AA (Z)")
+        formatter3.setAmPmNames("오전", "오후")
+        assertEquals("2024-1-20 1:42:29 오후 오후 (-07:00)", formatter3.format(dateTime.toKZonedInstant()))
+        assertEquals("2024-1-20 8:42:29 오전 오전 (-07:00)", formatter3.format(dateTime2.toKZonedInstant()))
+
+        val formatter4 = KDateTimeFormat("yyyy-M-d h:mm:ss AA aa (Z)")
+        formatter4.setAmPmNames("a.m.", "p.m.", "AK.MK.", "PK.MK.")
+        assertEquals("2024-1-20 1:42:29 PK.MK. p.m. (-07:00)", formatter4.format(dateTime.toKZonedInstant()))
+        assertEquals("2024-1-20 8:42:29 AK.MK. a.m. (-07:00)", formatter4.format(dateTime2.toKZonedInstant()))
     }
 
     @Test
