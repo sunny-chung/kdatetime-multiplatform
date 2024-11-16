@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform") version "1.9.25"
@@ -43,7 +44,7 @@ kotlin {
 //        publishAllLibraryVariants()
         publishLibraryVariants = listOf("release")
     }
-    val darwinTargets = listOf(
+    val darwinTargets = listOf<KotlinNativeTarget>(
         iosArm64(),
         iosSimulatorArm64(),
         iosX64(),
