@@ -72,7 +72,7 @@ println(localZoneOffset.toDisplayString()) // +08:00
 
 val localDateTime = now.atZoneOffset(localZoneOffset) // or now.atLocalZoneOffset()
 println(localDateTime.format("yyyy-MM-dd'T'HH:mm:ss.lllZ")) // 2023-09-13T23:17:22.720+08:00
-println(localDateTime.format("yyyy-MM-dd h:mm:ss aa")) // 2023-09-13 11:17:22 pm
+println(localDateTime.format("dd MMM yyyy h:mm:ss aa")) // 13 Sep 2023 11:17:22 pm
 
 println(KZonedInstant.nowAtLocalZoneOffset()) // 2023-09-13T23:17:22.722+08:00
 
@@ -240,7 +240,7 @@ import shared
 - So, only datetimes from year 1753 onwards are supported
 - Only timestamps between year 1753 and 3999 are supported
 - Minimum time unit is millisecond
-- Only English is supported for locale-specific inputs and outputs (custom localized strings can be provided)
+- English is default for locale-specific inputs and outputs (custom localized strings can be provided, check [documentation](https://sunny-chung.github.io/kdatetime-multiplatform/Features/Formatting%20and%20Parsing/))
 
 # For Developers
 

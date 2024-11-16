@@ -266,4 +266,45 @@ class KDateTimeFormatTest {
         val timeStr4 = "2023-04-30T11:00:00.000+08:00PM"
         assertEquals(1682866800000, formatter4.parseToKZonedDateTime(timeStr4).toKInstant().toMilliseconds())
     }
+
+    @Test
+    fun formatMonthNames() {
+        val zonedInstant = KInstant(1731723336012).at(KZoneOffset(8, 0)) // Sat, 16 Nov 2024 10:15:36.012 HKT
+        KDateTimeFormat(pattern = "E, dd MMM yyyy HH:mm:ss.lll Z").let { formatter ->
+            assertEquals("Sat, 16 Nov 2024 10:15:36.012 +08:00", formatter.format(zonedInstant))
+        }
+        KDateTimeFormat(pattern = "E, dd MMMM yyyy HH:mm:ss.lll Z").let { formatter ->
+            assertEquals("Sat, 16 November 2024 10:15:36.012 +08:00", formatter.format(zonedInstant))
+        }
+        KDateTimeFormat(pattern = "MMMM dd").let { formatter ->
+            formatter.monthLongNames = listOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十工月")
+            assertEquals("十一月 16", formatter.format(zonedInstant))
+        }
+        KDateTimeFormat(pattern = "MMM dd").let { formatter ->
+            formatter.monthShortNames = listOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十工月")
+            assertEquals("十一月 16", formatter.format(zonedInstant))
+        }
+    }
+
+    @Test
+    fun parseMonthNames() {
+        KDateTimeFormat(pattern = "dd MMM yyyy HH:mm:ss.lll Z").let { formatter ->
+            val zonedDateTime = formatter.parseToKZonedDateTime("16 Nov 2024 10:15:36.012 +08:00")
+            assertEquals(1731723336012, zonedDateTime.toKInstant().toEpochMilliseconds())
+        }
+        KDateTimeFormat(pattern = "dd MMMM yyyy HH:mm:ss.lll Z").let { formatter ->
+            val zonedDateTime = formatter.parseToKZonedDateTime("16 November 2024 10:15:36.012 +08:00")
+            assertEquals(1731723336012, zonedDateTime.toKInstant().toEpochMilliseconds())
+        }
+        KDateTimeFormat(pattern = "dd MMM yyyy HH:mm:ss.lll Z").let { formatter ->
+            formatter.monthShortNames = listOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月")
+            val zonedDateTime = formatter.parseToKZonedDateTime("16 十一月 2024 10:15:36.012 +08:00")
+            assertEquals(1731723336012, zonedDateTime.toKInstant().toEpochMilliseconds())
+        }
+        KDateTimeFormat(pattern = "dd MMMM yyyy HH:mm:ss.lll Z").let { formatter ->
+            formatter.monthLongNames = listOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月")
+            val zonedDateTime = formatter.parseToKZonedDateTime("16 十一月 2024 10:15:36.012 +08:00")
+            assertEquals(1731723336012, zonedDateTime.toKInstant().toEpochMilliseconds())
+        }
+    }
 }

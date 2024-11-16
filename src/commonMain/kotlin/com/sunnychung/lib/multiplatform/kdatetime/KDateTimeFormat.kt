@@ -39,6 +39,10 @@ class KDateTimeFormat(val pattern: String) {
 
     protected var ampmLowercaseNames = AMPM_LOWERCASE_NAMES
 
+    var monthLongNames = MONTH_LONG_NAMES
+
+    var monthShortNames = MONTH_SHORT_NAMES
+
     fun setAmPmNames(amLowercase: String, pmLowercase: String, amUppercase: String = amLowercase.uppercase(), pmUppercase: String = pmLowercase.uppercase()) {
         ampmLowercaseNames = listOf(amLowercase, pmLowercase)
         ampmUppercaseNames = listOf(amUppercase, pmUppercase)
@@ -47,7 +51,7 @@ class KDateTimeFormat(val pattern: String) {
     enum class FormatTokenType(val hasLengthLimit: Boolean = true, val allowedLengths: List<Int> = listOf(), val hasDynamicLength: Boolean = false) {
         Literial(hasLengthLimit = false),
         Year(allowedLengths = listOf(2, 4)),
-        Month(allowedLengths = listOf(1, 2)),
+        Month(hasLengthLimit = false, hasDynamicLength = true),
         DayOfMonth(allowedLengths = listOf(1, 2)),
         Hour_0_23(allowedLengths = listOf(1, 2)),
         Hour_1_12(allowedLengths = listOf(1, 2)),
@@ -155,7 +159,12 @@ class KDateTimeFormat(val pattern: String) {
             when (it.type) {
                 FormatTokenType.Literial -> s.append(it.literal)
                 FormatTokenType.Year -> s.append(localDate.year.toString().substring(if (it.length == 2) 2 else 0))
-                FormatTokenType.Month -> s.append(localDate.month.toString().padStart(it.length, '0'))
+                FormatTokenType.Month -> s.append(when (it.length) {
+                    in 1 .. 2 -> localDate.month.toString().padStart(it.length, '0')
+                    3 -> monthShortNames[localDate.month - 1]
+                    in 4 .. Int.MAX_VALUE -> monthLongNames[localDate.month - 1]
+                    else -> throw IllegalArgumentException("Unexpected length (${it.length}) for month tokens")
+                })
                 FormatTokenType.DayOfMonth -> s.append(localDate.day.toString().padStart(it.length, '0'))
                 FormatTokenType.Hour_0_23 -> s.append(localDateTime.hourPart().toString().padStart(it.length, '0'))
                 FormatTokenType.Hour_1_12 -> {
@@ -226,6 +235,18 @@ class KDateTimeFormat(val pattern: String) {
         }
     }
 
+    /**
+     * @return Index of matched entry in `matches`
+     */
+    protected fun parseText(input: String, matches: List<String>): DynamicLengthParseResult<Int> {
+        matches.forEachIndexed { index, it ->
+            if (input.startsWith(it)) {
+                return DynamicLengthParseResult(index, it.length)
+            }
+        }
+        throw ParseDateTimeException()
+    }
+
     fun parseToKZonedDateTime(input: String): KZonedDateTime {
         validateForFullValidParser()
 
@@ -249,7 +270,7 @@ class KDateTimeFormat(val pattern: String) {
             var length = token.length
             if (token.type == FormatTokenType.Literial) {
                 if (inputSubstring != token.literal!!) {
-                    throw ParseDateTimeException()
+                    throw ParseDateTimeException("Unknown string: \"$inputSubstring\"")
                 }
                 startIndex += length
                 return@forEach // skip because no field to input
@@ -264,7 +285,16 @@ class KDateTimeFormat(val pattern: String) {
                         }
                     }
 
-                    FormatTokenType.Month -> month = inputSubstring.toInt()
+                    FormatTokenType.Month -> if (token.length in 1 .. 2) {
+                        month = inputSubstring.substring(0, token.length).toInt()
+                    } else {
+                        val result = parseText(
+                            input = inputSubstring,
+                            matches = if (token.length == 3) monthShortNames else monthLongNames
+                        )
+                        month = result.value + 1 // month is 1-based
+                        length = result.length
+                    }
                     FormatTokenType.DayOfMonth -> dayOfMonth = inputSubstring.toInt()
                     FormatTokenType.Hour_0_23 -> hour = inputSubstring.toInt()
                     FormatTokenType.Hour_1_12 -> hour = inputSubstring.toInt()
@@ -355,6 +385,8 @@ class KDateTimeFormat(val pattern: String) {
         val IOS_DATE_FORMATS = listOf(FULL, ISO8601_DATETIME, KDateTimeFormat("yyyy-MM-dd'T'HH:mmZ"))
 
         val WEEKDAY_NAMES = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+        val MONTH_LONG_NAMES = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+        val MONTH_SHORT_NAMES = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
         val AMPM_UPPERCASE_NAMES = listOf("AM", "PM")
         val AMPM_LOWERCASE_NAMES = listOf("am", "pm")
 

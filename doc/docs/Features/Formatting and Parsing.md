@@ -85,6 +85,21 @@ formatter3.setAmPmNames("오전", "오후")
 println(formatter3.format(dateTime)) // 오전 오전
 ```
 
+### Formatting Localized Months
+```kotlin
+val zonedInstant = KInstant(1731723336012).at(KZoneOffset(8, 0)) // Sat, 16 Nov 2024 10:15:36.012 HKT
+println(KDateTimeFormat(pattern = "E, dd MMM yyyy HH:mm:ss.lll Z").format(zonedInstant)) // Sat, 16 Nov 2024 10:15:36.012 +08:00
+println(KDateTimeFormat(pattern = "E, dd MMMM yyyy HH:mm:ss.lll Z").format(zonedInstant)) // Sat, 16 November 2024 10:15:36.012 +08:00
+KDateTimeFormat(pattern = "MMMM dd").let { formatter ->
+    formatter.monthLongNames = listOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月")
+    println(formatter.format(zonedInstant)) // 十一月 16
+}
+KDateTimeFormat(pattern = "MMM dd").let { formatter ->
+    formatter.monthShortNames = listOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月")
+    println(formatter.format(zonedInstant)) // 十一月 16
+}
+```
+
 ### Parsing from Strings
 
 Parse from ISO 8601 format without milliseconds
@@ -154,6 +169,18 @@ Parse localized AM/PM
 val time: KZonedInstant = KDateTimeFormat("yy-MM-dd hh:mm:ss A Z")
             .apply { setAmPmNames("a.m.", "p.m.") }
             .parseToKZonedDateTime("23-09-11 02:54:19 P.M. -01:00")
+            .toKZonedInstant()
+```
+
+Parse localized month names
+```kotlin
+val timeFromEnglishString: KZonedInstant = KDateTimeFormat("dd MMMM yyyy HH:mm:ss.lll Z")
+            .parseToKZonedDateTime("16 November 2024 10:15:36.012 +08:00")
+            .toKZonedInstant()
+
+val timeFromChineseString: KZonedInstant = KDateTimeFormat("dd MMM yyyy HH:mm:ss.lll Z")
+            .apply { monthShortNames = listOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月") }
+            .parseToKZonedDateTime("16 十一月 2024 10:15:36.012 +08:00")
             .toKZonedInstant()
 ```
 
