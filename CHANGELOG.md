@@ -1,0 +1,22 @@
+# KDateTime Multiplatform Changelog
+
+All notable changes to the KDateTime Multiplatform library will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [Unreleased]
+
+Nothing yet.
+
+
+## [1.1.0] -- 2024-12-06
+
+_Changes since v1.0.0_
+
+### Added
+- Formatting and parsing localized AM/PM
+- Formatting and parsing month names
+
+### Removed
+- JS legacy compiler support is dropped, as required by Kotlin 1.9
+
