@@ -12,6 +12,8 @@ Supported formats are as follows:
 |--------|-------------------------------|-------------------|
 | y      | year                          | 2023; 23          |
 | M      | month                         | 7; 07             |
+| MMM    | month short name              | Feb               |
+| MMMM   | month long name               | February          |
 | d      | day of month                  | 9; 09; 31         |
 | H      | hour (0~23)                   | 0; 00; 18         |
 | h      | hour (1~12)                   | 6; 06; 10         |
