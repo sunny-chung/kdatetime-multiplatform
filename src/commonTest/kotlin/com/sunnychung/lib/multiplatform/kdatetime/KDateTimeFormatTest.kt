@@ -20,6 +20,11 @@ class KDateTimeFormatTest {
         val dateTime3 = KInstant(1694455980000) // Monday, September 11, 2023 6:13:00 PM
         assertEquals("2023-09-11T18:13:00.000Z", dateTime3.format("yyyy-MM-dd'T'HH:mm:ss.lllZ"))
         assertEquals("2023-09-11T18:13:00.000+00:00", dateTime3.format("yyyy-MM-dd'T'HH:mm:ss.lllz"))
+
+        val dateTime4 = KInstant(-315616000000) // Friday, January 1, 1960 12:53:20 AM
+        assertEquals("1960-01-01T00:53:20.000Z", dateTime4.format("yyyy-MM-dd'T'HH:mm:ss.lllZ"))
+        assertEquals("1960-01-01T00:53:20.000+00:00", dateTime4.format("yyyy-MM-dd'T'HH:mm:ss.lllz"))
+
     }
 
     @Test
@@ -37,6 +42,9 @@ class KDateTimeFormatTest {
         val dateTime4 = KZonedInstant(1694404171789, "UTC") // Monday, September 11, 2023 3:49:31.789 AM GMT
         assertEquals("2023-09-11T03:49:31.789Z", dateTime4.format("yyyy-MM-dd'T'HH:mm:ss.lllZ"))
         assertEquals("2023-09-11T03:49:31.789+00:00", dateTime4.format("yyyy-MM-dd'T'HH:mm:ss.lllz"))
+
+        val dateTime5 = KZonedInstant(-146212690000, "+09:00") // Friday, May 15, 1965 2:21:50.000 AM +09:00
+        assertEquals("1965-05-15T02:21:50+09:00", KDateTimeFormat.ISO8601_DATETIME.format(dateTime5))
     }
 
     @Test
@@ -67,34 +75,16 @@ class KDateTimeFormatTest {
             assertEquals(13, dateTime.zoneOffset.hours)
             assertEquals(45, dateTime.zoneOffset.minutes)
         }
+
+        KDateTimeFormat.ISO8601_DATETIME.parseToKZonedDateTime("1965-07-29T04:25:22+09:00").toKZonedInstant().let { dateTime ->
+            assertEquals(-139725278000, dateTime.toMilliseconds())
+            assertEquals(9, dateTime.zoneOffset.hours)
+            assertEquals(0, dateTime.zoneOffset.minutes)
+        }
     }
 
     @Test
     fun parseDateTimeToKZonedInstantAmPm() {
-//        KDateTimeFormat("yy-MM-dd hh:mm:ss.lll aa Z").parseToKZonedDateTime("23-09-11 02:54:19.230 am Z").toKZonedInstant().let { dateTime ->
-//            assertEquals(1694400859230, dateTime.toMilliseconds())
-//            assertEquals(0, dateTime.zoneOffset.hours)
-//            assertEquals(0, dateTime.zoneOffset.minutes)
-//        }
-//
-//        KDateTimeFormat("yy-MM-dd hh:mm:ss aa AA Z").parseToKZonedDateTime("23-09-11 02:54:19 pm PM UTC").toKZonedInstant().let { dateTime ->
-//            assertEquals(1694444059000, dateTime.toMilliseconds())
-//            assertEquals(0, dateTime.zoneOffset.hours)
-//            assertEquals(0, dateTime.zoneOffset.minutes)
-//        }
-//
-//        KDateTimeFormat("yy-MM-dd hh:mm:ss AA aa Z").apply { setAmPmNames("오전", "오후") }.parseToKZonedDateTime("23-09-11 02:54:19 오후 오후 UTC").toKZonedInstant().let { dateTime ->
-//            assertEquals(1694444059000, dateTime.toMilliseconds())
-//            assertEquals(0, dateTime.zoneOffset.hours)
-//            assertEquals(0, dateTime.zoneOffset.minutes)
-//        }
-//
-//        KDateTimeFormat("yy-MM-dd hh:mm:ss AA aa Z").apply { setAmPmNames("오전", "오후", "上午", "下午") }.parseToKZonedDateTime("23-09-11 02:54:19 下午 오후 UTC").toKZonedInstant().let { dateTime ->
-//            assertEquals(1694444059000, dateTime.toMilliseconds())
-//            assertEquals(0, dateTime.zoneOffset.hours)
-//            assertEquals(0, dateTime.zoneOffset.minutes)
-//        }
-
         KDateTimeFormat("yy-MM-dd hh:mm:ss AAAA Z")
             .apply { setAmPmNames("a.m.", "p.m.") }
             .parseToKZonedDateTime("23-09-11 02:54:19 P.M. UTC")
@@ -132,6 +122,16 @@ class KDateTimeFormatTest {
             .let { dateTime ->
                 assertEquals(1694447659000, dateTime.toMilliseconds())
                 assertEquals(-1, dateTime.zoneOffset.hours)
+                assertEquals(0, dateTime.zoneOffset.minutes)
+            }
+
+        KDateTimeFormat("yyyy-MM-dd hh:mm:ss AA Z")
+            .apply { setAmPmNames("a.m.", "p.m.") }
+            .parseToKZonedDateTime("1962-04-29 04:11:22 P.M. +09:00")
+            .toKZonedInstant()
+            .let { dateTime ->
+                assertEquals(-242239718000, dateTime.toMilliseconds())
+                assertEquals(9, dateTime.zoneOffset.hours)
                 assertEquals(0, dateTime.zoneOffset.minutes)
             }
     }
