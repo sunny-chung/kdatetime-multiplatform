@@ -9,6 +9,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Nothing yet.
 
 
+## [1.1.1] -- 2025-07-01
+
+_Changes since v1.1.0_
+
+### Fixed
+- Incorrect date time formatting and part values if epoch timestamp is negative (#5)
+
+
 ## [1.1.0] -- 2024-12-07
 
 _Changes since v1.0.0_
